@@ -1,0 +1,22 @@
+---
+hostgroup:
+  organizations:
+    - Test Org1
+    - Test Org2
+  locations:
+    - Foo
+    - Foo/Baz
+    - Bar
+  compute_resource:
+    name: 'libvirt-cr'
+    params:
+      url: "qemu:///system"
+  compute_profile:
+    name: 'myprofile'
+  domains:
+    - foo.example.com
+    - bar.example.com
+  subnet: Test subnet4
+  subne6: Test subnet6
+  puppet_server: foreman.example.com
+  puppet_ca: foreman.example.com
