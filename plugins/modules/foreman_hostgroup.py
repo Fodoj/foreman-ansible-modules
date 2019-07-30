@@ -82,7 +82,7 @@ options:
     required: False
     default: None
   operatingsystem:
-    description: Operatingsystem name
+    description: Operatingsystem title
     required: False
     default: None
   pxe_loader:
@@ -229,6 +229,7 @@ def main():
                                      'Grub2 UEFI HTTPS SecureBoot', 'iPXE Embedded', 'iPXE UEFI HTTP', 'iPXE Chain BIOS', 'iPXE Chain UEFI']),
             root_pass=dict(no_log=True),
             environment=dict(),
+            config_groups=dict(type='list'),
             puppet_proxy=dict(),
             puppet_ca_proxy=dict(),
         ),
@@ -302,7 +303,7 @@ def main():
         if 'puppet_ca_proxy' in entity_dict:
             entity_dict['puppet_ca_proxy'] = module.find_resource_by_name('smart_proxies', name=entity_dict['puppet_ca_proxy'], failsafe=False, thin=True)
 
-    entity = module.find_resource('hostgroups', search='title="{}"'.format(build_fqn(name, parent)), failsafe=True)
+    entity = module.find_resource_by_title('hostgroups', title=build_fqn(name, parent), failsafe=True)
     if entity:
         entity['root_pass'] = None
 

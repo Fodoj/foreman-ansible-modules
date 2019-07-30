@@ -15,12 +15,12 @@ interactions:
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 22 Jul 2019 13:58:52 GMT']
+      date: ['Tue, 23 Jul 2019 18:58:39 GMT']
       etag: [W/"674e9dbc2140c688b559566b581c5c09"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
-      set-cookie: [_session_id=43b643628fe77b3454a3a6e6db34d973; path=/; secure; HttpOnly;
+      set-cookie: [_session_id=2c237bf673a3bafdfa5b9ff9f7d21524; path=/; secure; HttpOnly;
           SameSite=Lax]
       status: [200 OK]
       strict-transport-security: [max-age=631139040; includeSubdomains]
@@ -29,26 +29,26 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [79a646ca-82a7-43f1-894a-b93325bca105]
-      x-runtime: ['0.026431']
+      x-request-id: [4852c8ca-7e94-4fbe-839d-0f49b6b33cbd]
+      x-runtime: ['0.027329']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=43b643628fe77b3454a3a6e6db34d973]
+      Cookie: [_session_id=2c237bf673a3bafdfa5b9ff9f7d21524]
     method: GET
     uri: https://foreman.example.com/api/hostgroups?per_page=4294967296&search=title%3D%22New+host+group%22&thin=False
   response:
-    body: {string: !!python/unicode "{\n  \"total\": 1,\n  \"subtotal\": 1,\n  \"page\":
+    body: {string: !!python/unicode "{\n  \"total\": 2,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"New host group\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"subnet_id\":9,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":2,\"operatingsystem_name\":\"TestOS
-        1.2\",\"domain_id\":18,\"domain_name\":\"foo.example.com\",\"environment_id\":1,\"environment_name\":\"production\",\"compute_profile_id\":5,\"compute_profile_name\":\"myprofile\",\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"ptable_id\":123,\"ptable_name\":\"Timetravel
-        finish\",\"medium_id\":18,\"medium_name\":\"Temple OS 1.0\",\"pxe_loader\":\"Grub2
-        UEFI\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-07-22
-        13:58:42 UTC\",\"updated_at\":\"2019-07-22 13:58:42 UTC\",\"id\":52,\"name\":\"New
+        [{\"subnet_id\":16,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":8,\"operatingsystem_name\":\"TestOS
+        7.6\",\"domain_id\":30,\"domain_name\":\"foo.example.com\",\"environment_id\":1,\"environment_name\":\"production\",\"compute_profile_id\":11,\"compute_profile_name\":\"myprofile\",\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"ptable_id\":129,\"ptable_name\":\"Part
+        table\",\"medium_id\":24,\"medium_name\":\"TestOS Mirror\",\"pxe_loader\":\"Grub2
+        UEFI\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-07-23
+        18:58:28 UTC\",\"updated_at\":\"2019-07-23 18:58:28 UTC\",\"id\":71,\"name\":\"New
         host group\",\"title\":\"New host group\",\"description\":\"New host group\",\"puppet_proxy_id\":1,\"puppet_proxy_name\":\"foreman.example.com\",\"puppet_ca_proxy_id\":1,\"puppet_ca_proxy_name\":\"foreman.example.com\",\"openscap_proxy_id\":null,\"openscap_proxy_name\":null,\"puppet_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"puppet_ca_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"openscap_proxy\":null}]\n}\n"}
     headers:
       apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
@@ -57,8 +57,8 @@ interactions:
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 22 Jul 2019 13:58:52 GMT']
-      etag: [W/"69ee43647528fe16f593e9c34377eb27"]
+      date: ['Tue, 23 Jul 2019 18:58:39 GMT']
+      etag: [W/"b5aef1d4dd10c1af5a6b504b4ced0aac"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -71,24 +71,26 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [1d37368d-ea87-4f9d-ab41-89eeec5a2122]
-      x-runtime: ['0.029993']
+      x-request-id: [7e17c754-4d84-4a8b-a656-17a32462f057]
+      x-runtime: ['0.030201']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=43b643628fe77b3454a3a6e6db34d973]
+      Cookie: [_session_id=2c237bf673a3bafdfa5b9ff9f7d21524]
     method: GET
-    uri: https://foreman.example.com/api/hostgroups/52
+    uri: https://foreman.example.com/api/hostgroups/71
   response:
-    body: {string: !!python/unicode '{"content_source_id":null,"content_source_name":null,"content_view_id":null,"content_view_name":null,"lifecycle_environment_id":null,"lifecycle_environment_name":null,"kickstart_repository_id":null,"kickstart_repository_name":null,"subnet_id":9,"subnet_name":"Test
-        subnet4","operatingsystem_id":2,"operatingsystem_name":"TestOS 1.2","domain_id":18,"domain_name":"foo.example.com","environment_id":1,"environment_name":"production","compute_profile_id":5,"compute_profile_name":"myprofile","ancestry":null,"parent_id":null,"parent_name":null,"ptable_id":123,"ptable_name":"Timetravel
-        finish","medium_id":18,"medium_name":"Temple OS 1.0","pxe_loader":"Grub2 UEFI","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-07-22
-        13:58:42 UTC","updated_at":"2019-07-22 13:58:42 UTC","id":52,"name":"New host
-        group","title":"New host group","description":"New host group","puppet_proxy_id":1,"puppet_proxy_name":"foreman.example.com","puppet_ca_proxy_id":1,"puppet_ca_proxy_name":"foreman.example.com","openscap_proxy_id":null,"openscap_proxy_name":null,"puppet_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"puppet_ca_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"openscap_proxy":null,"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[],"all_puppetclasses":[],"locations":[{"id":37,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":36,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":38,"name":"Test
-        Org1","title":"Test Org1","description":"A test organization"},{"id":39,"name":"Test
+    body: {string: !!python/unicode '{"content_source_id":null,"content_source_name":null,"content_view_id":null,"content_view_name":null,"lifecycle_environment_id":null,"lifecycle_environment_name":null,"kickstart_repository_id":null,"kickstart_repository_name":null,"subnet_id":16,"subnet_name":"Test
+        subnet4","operatingsystem_id":8,"operatingsystem_name":"TestOS 7.6","domain_id":30,"domain_name":"foo.example.com","environment_id":1,"environment_name":"production","compute_profile_id":11,"compute_profile_name":"myprofile","ancestry":null,"parent_id":null,"parent_name":null,"ptable_id":129,"ptable_name":"Part
+        table","medium_id":24,"medium_name":"TestOS Mirror","pxe_loader":"Grub2 UEFI","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-07-23
+        18:58:28 UTC","updated_at":"2019-07-23 18:58:28 UTC","id":71,"name":"New host
+        group","title":"New host group","description":"New host group","puppet_proxy_id":1,"puppet_proxy_name":"foreman.example.com","puppet_ca_proxy_id":1,"puppet_ca_proxy_name":"foreman.example.com","openscap_proxy_id":null,"openscap_proxy_name":null,"puppet_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"puppet_ca_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"openscap_proxy":null,"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[{"created_at":"2019-07-23
+        18:58:25 UTC","updated_at":"2019-07-23 18:58:25 UTC","id":39,"name":"cfg_group1","puppetclasses":[]},{"created_at":"2019-07-23
+        18:58:26 UTC","updated_at":"2019-07-23 18:58:26 UTC","id":40,"name":"cfg_group2","puppetclasses":[]}],"all_puppetclasses":[],"locations":[{"id":61,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":60,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":62,"name":"Test
+        Org1","title":"Test Org1","description":"A test organization"},{"id":63,"name":"Test
         Org2","title":"Test Org2","description":"A test organization"}]}'}
     headers:
       apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
@@ -97,8 +99,8 @@ interactions:
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 22 Jul 2019 13:58:52 GMT']
-      etag: [W/"63150f7249ac944cf2f01b52d24cd5d8"]
+      date: ['Tue, 23 Jul 2019 18:58:40 GMT']
+      etag: [W/"772e3935474781eaa5b957fda4633eea"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -111,8 +113,8 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [89d429dc-94a4-41be-9c12-19657537f91b]
-      x-runtime: ['0.044380']
+      x-request-id: [0a22b70d-3f16-4bfe-a64c-42036f46b437]
+      x-runtime: ['0.055445']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
@@ -121,16 +123,18 @@ interactions:
       Accept: [application/json;version=2]
       Content-Length: ['40']
       Content-Type: [application/json]
-      Cookie: [_session_id=43b643628fe77b3454a3a6e6db34d973]
+      Cookie: [_session_id=2c237bf673a3bafdfa5b9ff9f7d21524]
     method: PUT
-    uri: https://foreman.example.com/api/hostgroups/52
+    uri: https://foreman.example.com/api/hostgroups/71
   response:
-    body: {string: !!python/unicode '{"subnet_id":9,"subnet_name":"Test subnet4","operatingsystem_id":2,"operatingsystem_name":"TestOS
-        1.2","domain_id":18,"domain_name":"foo.example.com","environment_id":1,"environment_name":"production","compute_profile_id":5,"compute_profile_name":"myprofile","ancestry":null,"parent_id":null,"parent_name":null,"ptable_id":123,"ptable_name":"Timetravel
-        finish","medium_id":18,"medium_name":"Temple OS 1.0","pxe_loader":"Grub2 UEFI","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-07-22
-        13:58:42 UTC","updated_at":"2019-07-22 13:58:52 UTC","id":52,"name":"New host
-        group","title":"New host group","description":"New host group","puppet_proxy_id":1,"puppet_proxy_name":"foreman.example.com","puppet_ca_proxy_id":1,"puppet_ca_proxy_name":"foreman.example.com","openscap_proxy_id":null,"openscap_proxy_name":null,"puppet_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"puppet_ca_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"openscap_proxy":null,"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[],"all_puppetclasses":[],"locations":[{"id":37,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":36,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":38,"name":"Test
-        Org1","title":"Test Org1","description":"A test organization"},{"id":39,"name":"Test
+    body: {string: !!python/unicode '{"subnet_id":16,"subnet_name":"Test subnet4","operatingsystem_id":8,"operatingsystem_name":"TestOS
+        7.6","domain_id":30,"domain_name":"foo.example.com","environment_id":1,"environment_name":"production","compute_profile_id":11,"compute_profile_name":"myprofile","ancestry":null,"parent_id":null,"parent_name":null,"ptable_id":129,"ptable_name":"Part
+        table","medium_id":24,"medium_name":"TestOS Mirror","pxe_loader":"Grub2 UEFI","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-07-23
+        18:58:28 UTC","updated_at":"2019-07-23 18:58:40 UTC","id":71,"name":"New host
+        group","title":"New host group","description":"New host group","puppet_proxy_id":1,"puppet_proxy_name":"foreman.example.com","puppet_ca_proxy_id":1,"puppet_ca_proxy_name":"foreman.example.com","openscap_proxy_id":null,"openscap_proxy_name":null,"puppet_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"puppet_ca_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"openscap_proxy":null,"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[{"created_at":"2019-07-23
+        18:58:25 UTC","updated_at":"2019-07-23 18:58:25 UTC","id":39,"name":"cfg_group1","puppetclasses":[]},{"created_at":"2019-07-23
+        18:58:26 UTC","updated_at":"2019-07-23 18:58:26 UTC","id":40,"name":"cfg_group2","puppetclasses":[]}],"all_puppetclasses":[],"locations":[{"id":61,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":60,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":62,"name":"Test
+        Org1","title":"Test Org1","description":"A test organization"},{"id":63,"name":"Test
         Org2","title":"Test Org2","description":"A test organization"}]}'}
     headers:
       apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
@@ -139,8 +143,8 @@ interactions:
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Mon, 22 Jul 2019 13:58:52 GMT']
-      etag: [W/"17c66be6f03eb0dd693c9ee6448846bb"]
+      date: ['Tue, 23 Jul 2019 18:58:40 GMT']
+      etag: [W/"47242f4a702f8f58f44765876de68939"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -154,8 +158,8 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [9b0cdee1-b32b-4d66-b574-10761cb6f4a0]
-      x-runtime: ['0.100617']
+      x-request-id: [4fcb078b-0666-46ad-aabd-8d219e866f43]
+      x-runtime: ['0.092399']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 version: 1

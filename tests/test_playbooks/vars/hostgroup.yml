@@ -7,6 +7,13 @@ hostgroup:
     - Foo
     - Foo/Baz
     - Bar
+  arch: x86_64
+  ptable: "Part table"
+  os:
+    family: Redhat
+    name: TestOS
+    major: 7
+    minor: 6
   compute_resource:
     name: 'libvirt-cr'
     params:
@@ -20,3 +27,6 @@ hostgroup:
   subne6: Test subnet6
   puppet_server: foreman.example.com
   puppet_ca: foreman.example.com
+  config_groups:
+    - cfg_group1
+    - cfg_group2
