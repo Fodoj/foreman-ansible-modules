@@ -92,24 +92,13 @@ RETURN = ''' # '''
 from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule
 
 
-# This is the only true source for names (and conversions thereof)
-name_map = {
-    'locations': 'location_ids',
-    'name': 'name',
-    'operatingsystems': 'operatingsystem_ids',
-    'organizations': 'organization_ids',
-    'os_family': 'os_family',
-    'path': 'path',
-}
-
-
 def main():
     module = ForemanEntityApypieAnsibleModule(
-        argument_spec=dict(
+        entity_spec=dict(
             name=dict(required=True),
-            locations=dict(type='list'),
-            organizations=dict(type='list'),
-            operatingsystems=dict(type='list'),
+            locations=dict(type='entity_list', flat_name='location_ids'),
+            organizations=dict(type='entity_list', flat_name='organization_ids'),
+            operatingsystems=dict(type='entity_list', flat_name='operatingsystem_ids'),
             os_family=dict(),
             path=dict(),
         ),
@@ -141,8 +130,7 @@ def main():
 
     if not module.desired_absent:
         if 'operatingsystems' in entity_dict:
-            search_list = ['title~"{}"'.format(title) for title in entity_dict['operatingsystems']]
-            entity_dict['operatingsystems'] = module.find_resources('operatingsystems', search_list=search_list, thin=True)
+            entity_dict['operatingsystems'] = module.find_operatingsystems(entity_dict['operatingsystems'], thin=True)
             if not affects_multiple and len(entity_dict['operatingsystems']) == 1 and 'os_family' not in entity_dict and entity is None:
                 entity_dict['os_family'] = module.show_resource('operatingsystems', entity_dict['operatingsystems'][0]['id'])['family']
 
@@ -154,11 +142,11 @@ def main():
 
     changed = False
     if not affects_multiple:
-        changed = module.ensure_resource_state('media', entity_dict, entity, name_map=name_map)
+        changed = module.ensure_entity_state('media', entity_dict, entity)
     else:
         entity_dict.pop('name')
         for entity in entities:
-            changed |= module.ensure_resource_state('media', entity_dict, entity, name_map=name_map)
+            changed |= module.ensure_entity_state('media', entity_dict, entity)
 
     module.exit_json(changed=changed)
 

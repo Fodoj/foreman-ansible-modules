@@ -32,9 +32,13 @@ options:
     description: The full DNS domain name
     required: true
   dns_proxy:
+    aliases:
+      - dns
     description: DNS proxy to use within this domain for managing A records
     required: false
   description:
+    aliases:
+      - fullname
     description: Full name describing the domain
     required: false
   locations:
@@ -47,6 +51,35 @@ options:
     required: false
     default: None
     type: list
+  parameters:
+    description:
+      - Domain specific host parameters
+    required: false
+    type: list
+    elements: dict
+    options:
+      name:
+        description:
+          - Name of the parameter
+        required: true
+      value:
+        description:
+          - Value of the parameter
+        required: true
+        type: raw
+      parameter_type:
+        description:
+          - Type of the parameter
+        default: 'string'
+        choices:
+          - 'string'
+          - 'boolean'
+          - 'integer'
+          - 'real'
+          - 'array'
+          - 'hash'
+          - 'yaml'
+          - 'json'
   state:
     description: domain presence
     default: present
@@ -71,29 +104,19 @@ EXAMPLES = '''
 
 RETURN = ''' # '''
 
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule
-
-
-# This is the only true source for names (and conversions thereof)
-name_map = {
-    'name': 'name',
-    'description': 'fullname',
-    'dns_proxy': 'dns_id',
-    'locations': 'location_ids',
-    'organizations': 'organization_ids',
-}
+from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_entity_spec
 
 
 def main():
     module = ForemanEntityApypieAnsibleModule(
-        argument_spec=dict(
+        entity_spec=dict(
             name=dict(required=True),
-            description=dict(),
-            dns_proxy=dict(),
-            locations=dict(type='list'),
-            organizations=dict(type='list'),
+            description=dict(aliases=['fullname'], flat_name='fullname'),
+            dns_proxy=dict(type='entity', flat_name='dns_id', aliases=['dns']),
+            locations=dict(type='entity_list', flat_name='location_ids'),
+            organizations=dict(type='entity_list', flat_name='organization_ids'),
+            parameters=dict(type='nested_list', entity_spec=parameter_entity_spec),
         ),
-        name_map=name_map,
     )
 
     entity_dict = module.clean_params()
@@ -113,7 +136,13 @@ def main():
         if 'organizations' in entity_dict:
             entity_dict['organizations'] = module.find_resources_by_name('organizations', entity_dict['organizations'], thin=True)
 
-    changed = module.ensure_resource_state('domains', entity_dict, entity)
+    parameters = entity_dict.get('parameters')
+
+    changed, domain = module.ensure_entity('domains', entity_dict, entity)
+
+    if domain:
+        scope = {'domain_id': domain['id']}
+        changed |= module.ensure_scoped_parameters(scope, entity, parameters)
 
     module.exit_json(changed=changed)
 

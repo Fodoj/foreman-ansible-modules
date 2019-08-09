@@ -10,17 +10,17 @@ import re
 # We need our own json level2 matcher, because, python2 and python3 do not save
 # dictionaries in the same order
 def body_json_l2_matcher(r1, r2):
-    if r1.headers.get('content-type') == 'application/json' and r2.headers.get('content-type') == 'application/json':
+    if r1.headers.get('content-type') == r2.headers.get('content-type') == 'application/json':
         if r1.body is None or r2.body is None:
             return r1.body == r2.body
         body1 = json.loads(r1.body.decode('utf8'))
         body2 = json.loads(r2.body.decode('utf8'))
-        if 'search' in body1:
-            body1['search'] = ','.join(sorted(re.findall(r'([^=,]*="(?:[^"]|\\")*")', body1['search'])))
-        if 'search' in body2:
-            body2['search'] = ','.join(sorted(re.findall(r'([^=,]*="(?:[^"]|\\")*")', body2['search'])))
+        if 'common_parameter' in body1 and 'common_parameter' in body2:
+            if body1['common_parameter'].get('parameter_type') == body2['common_parameter'].get('parameter_type') in ['hash', 'json', 'yaml']:
+                body1['common_parameter']['value'] = json.loads(body1['common_parameter'].get('value'))
+                body2['common_parameter']['value'] = json.loads(body2['common_parameter'].get('value'))
         return body1 == body2
-    elif r1.headers.get('content-type') == 'multipart/form-data' and r2.headers.get('content-type') == 'multipart/form-data':
+    elif r1.headers.get('content-type') == r2.headers.get('content-type') == 'multipart/form-data':
         if r1.body is None or r2.body is None:
             return r1.body == r2.body
         body1 = sorted(r1.body.replace(b'~', b'%7E').split(b'&'))
@@ -35,10 +35,29 @@ def body_json_l2_matcher(r1, r2):
         return r1.body == r2.body
 
 
-def domain_query_matcher(r1, r2):
+def snapshot_query_matcher(r1, r2):
+    if r1.path == '/api/hosts' and r2.path == '/api/hosts':
+        return [q for q in r1.query if q[0] != 'search'] == [q for q in r2.query if q[0] != 'search']
+    return r1.query == r2.query
+
+
+def query_matcher_ignore_proxy(r1, r2):
     if r1.path == '/api/smart_proxies' and r2.path == '/api/smart_proxies':
         return [q for q in r1.query if q[0] != 'search'] == [q for q in r2.query if q[0] != 'search']
     return r1.query == r2.query
+
+
+def katello_manifest_body_matcher(r1, r2):
+    if r1.path.endswith('/subscriptions/upload') and r2.path.endswith('/subscriptions/upload'):
+        if r1.headers.get('content-type').startswith('multipart/form-data') and r2.headers.get('content-type').startswith('multipart/form-data'):
+            r1_copy = vcr.request.Request(r1.method, r1.uri, r1.body, r1.headers)
+            r2_copy = vcr.request.Request(r2.method, r2.uri, r2.body, r2.headers)
+            # the body is a huge binary blob, which seems to differ on every run, so we just ignore it
+            body1 = body2 = {}
+            r1_copy.body = json.dumps(body1)
+            r2_copy.body = json.dumps(body2)
+            return body_json_l2_matcher(r1_copy, r2_copy)
+    return body_json_l2_matcher(r1, r2)
 
 
 def host_body_matcher(r1, r2):
@@ -81,10 +100,14 @@ else:
     # Call the original python script with vcr-cassette in place
     fam_vcr = vcr.VCR()
 
-    query_matcher = 'query'
-    if test_params['test_name'] == 'domain':
-        fam_vcr.register_matcher('domain_query', domain_query_matcher)
-        query_matcher = 'domain_query'
+    if test_params['test_name'] in ['domain', 'hostgroup', 'realm']:
+        fam_vcr.register_matcher('query_ignore_proxy', query_matcher_ignore_proxy)
+        query_matcher = 'query_ignore_proxy'
+    elif test_params['test_name'] == 'snapshot':
+        fam_vcr.register_matcher('snapshot_query', snapshot_query_matcher)
+        query_matcher = 'snapshot_query'
+    else:
+        query_matcher = 'query'
 
     fam_vcr.register_matcher('body_json_l2', body_json_l2_matcher)
 
@@ -92,6 +115,9 @@ else:
     if test_params['test_name'] == 'host':
         fam_vcr.register_matcher('host_body', host_body_matcher)
         body_matcher = 'host_body'
+    elif test_params['test_name'] == 'katello_manifest':
+        fam_vcr.register_matcher('katello_manifest_body', katello_manifest_body_matcher)
+        body_matcher = 'katello_manifest_body'
 
     with fam_vcr.use_cassette(cassette_file,
                               record_mode=test_params['record_mode'],

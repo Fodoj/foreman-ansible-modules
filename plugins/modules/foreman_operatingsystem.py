@@ -25,11 +25,10 @@ ANSIBLE_METADATA = {'metadata_version': '1.0',
 
 DOCUMENTATION = '''
 ---
-module: foreman_operating_system
+module: foreman_operatingsystem
 short_description: Manage Foreman Operating Systems
 description:
   - "Manage Foreman Operating System Entities"
-  - "Uses https://github.com/SatelliteQE/nailgun"
 author:
   - "Matthias M Dellweg (@mdellweg) ATIX AG"
   - "Bernhard Hopfenmüller (@Fobhep) ATIX AG"
@@ -39,7 +38,7 @@ options:
   name:
     description:
       - Name of the Operating System
-    required: true
+    required: false
   release_name:
     description:
       - Release name of the operating system (recommended for debian)
@@ -50,11 +49,11 @@ options:
   family:
     description:
       - distribution family of the Operating System
-    required: true
+    required: false
   major:
     description:
       - major version of the Operating System
-    required: true
+    required: false
   minor:
     description:
       - minor version of the Operating System
@@ -129,7 +128,7 @@ extends_documentation_fragment: foreman
 
 EXAMPLES = '''
 - name: "Create an Operating System"
-  foreman_operating_system:
+  foreman_operatingsystem:
     username: "admin"
     password: "changeme"
     server_url: "https://foreman.example.com"
@@ -143,7 +142,7 @@ EXAMPLES = '''
     state: present
 
 - name: "Ensure existence of an Operating System (provide default values)"
-  foreman_operating_system:
+  foreman_operatingsystem:
     username: "admin"
     password: "changeme"
     server_url: "https://foreman.example.com"
@@ -154,7 +153,7 @@ EXAMPLES = '''
     state: present_with_defaults
 
 - name: "Delete an Operating System"
-  foreman_operating_system:
+  foreman_operatingsystem:
     username: "admin"
     password: "changeme"
     server_url: "https://foreman.example.com"
@@ -167,56 +166,36 @@ EXAMPLES = '''
 RETURN = ''' # '''
 
 
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_value_to_str
-
-
-# This is the only true source for names (and conversions thereof)
-entity_spec = {
-    'id': {},
-    'name': {},
-    'description': {},
-    'family': {},
-    'major': {},
-    'minor': {},
-    'release_name': {},
-    'architectures': {'type': 'entity_list', 'flat_name': 'architecture_ids'},
-    'media': {'type': 'entity_list', 'flat_name': 'medium_ids'},
-    'ptables': {'type': 'entity_list', 'flat_name': 'ptable_ids'},
-    'provisioning_templates': {'type': 'entity_list', 'flat_name': 'provisioning_template_ids'},
-    'password_hash': {},
-}
-
-
-parameter_entity_spec = {
-    'id': {},
-    'name': {},
-    'value': {},
-    'parameter_type': {},
-}
+from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_entity_spec
 
 
 def main():
     module = ForemanEntityApypieAnsibleModule(
-        argument_spec=dict(
-            name=dict(required=True),
+        entity_spec=dict(
+            name=dict(),
             release_name=dict(),
             description=dict(),
-            family=dict(required=True),
-            major=dict(required=True),
+            family=dict(),
+            major=dict(),
             minor=dict(),
-            architectures=dict(type='list'),
-            media=dict(type='list'),
-            ptables=dict(type='list'),
-            provisioning_templates=dict(type='list'),
+            architectures=dict(type='entity_list', flat_name='architecture_ids'),
+            media=dict(type='entity_list', flat_name='medium_ids'),
+            ptables=dict(type='entity_list', flat_name='ptable_ids'),
+            provisioning_templates=dict(type='entity_list', flat_name='provisioning_template_ids'),
             password_hash=dict(choices=['MD5', 'SHA256', 'SHA512']),
-            parameters=dict(type='list', elements='dict', options=dict(
-                name=dict(required=True),
-                value=dict(type='raw', required=True),
-                parameter_type=dict(default='string', choices=['string', 'boolean', 'integer', 'real', 'array', 'hash', 'yaml', 'json']),
-            )),
+            parameters=dict(type='nested_list', entity_spec=parameter_entity_spec),
+        ),
+        argument_spec=dict(
             state=dict(default='present', choices=['present', 'present_with_defaults', 'absent']),
         ),
-        entity_spec=entity_spec,
+        required_if=[
+            ['state', 'present', ['name', 'major', 'family']],
+            ['state', 'present_with_defaults', ['name', 'major', 'family']],
+        ],
+        required_one_of=[
+            ['description', 'name'],
+            ['description', 'major'],
+        ],
     )
 
     entity_dict = module.clean_params()
@@ -228,9 +207,11 @@ def main():
     entity = None
     # If we have a description, search for it
     if 'description' in entity_dict and entity_dict['description'] != '':
-        entity = module.find_resource_by_title('operatingsystems', entity_dict['description'], failsafe=True)
+        search_string = 'description="{}"'.format(entity_dict['description'])
+        entity = module.find_resource('operatingsystems', search_string, failsafe=True)
     # If we did not yet find a unique OS, search by name & version
-    if entity is None:
+    # In case of state == absent, those information might be missing, we assume that we did not find an operatingsytem to delete then
+    if entity is None and 'name' in entity_dict and 'major' in entity_dict:
         search_string = ','.join('{}="{}"'.format(key, entity_dict[key]) for key in ('name', 'major', 'minor') if key in entity_dict)
         entity = module.find_resource('operatingsystems', search_string, failsafe=True)
 
@@ -257,28 +238,9 @@ def main():
 
     changed, operating_system = module.ensure_entity('operatingsystems', entity_dict, entity)
 
-    if parameters is not None:
-        if module.state == 'present' or (module.state == 'present_with_defaults' and entity is None):
-            search_params = {'operatingsystem_id': operating_system['id']}
-            if entity:
-                current_parameters = {parameter['name']: parameter for parameter in module.list_resource('parameters', params=search_params)}
-            else:
-                current_parameters = {}
-            desired_parameters = {parameter['name']: parameter for parameter in parameters}
-
-            for name in desired_parameters:
-                desired_parameter = desired_parameters[name]
-                desired_parameter['value'] = parameter_value_to_str(desired_parameter['value'], desired_parameter['parameter_type'])
-                current_parameter = current_parameters.pop(name, None)
-                if current_parameter:
-                    if 'parameter_type' not in current_parameter:
-                        current_parameter['parameter_type'] = 'string'
-                    current_parameter['value'] = parameter_value_to_str(current_parameter['value'], current_parameter['parameter_type'])
-                changed |= module.ensure_entity(
-                    'parameters', desired_parameter, current_parameter, state="present", entity_spec=parameter_entity_spec, params=search_params)[0]
-            for current_parameter in current_parameters.values():
-                changed |= module.ensure_entity(
-                    'parameters', None, current_parameter, state="absent", entity_spec=parameter_entity_spec, params=search_params)[0]
+    if operating_system:
+        scope = {'operatingsystem_id': operating_system['id']}
+        changed |= module.ensure_scoped_parameters(scope, entity, parameters)
 
     module.exit_json(changed=changed)
 

@@ -4,23 +4,23 @@ interactions:
     headers:
       Accept: [application/json;version=2]
     method: GET
-    uri: https://foreman.example.com/api/status
+    uri: https://centos7-katello-3-12/api/status
   response:
     body: {string: !!python/unicode '{"result":"ok","status":200,"version":"1.22.0","api_version":2}'}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-length: ['63']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
       etag: [W/"674e9dbc2140c688b559566b581c5c09"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
-      set-cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69; path=/; secure; HttpOnly;
+      set-cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd; path=/; secure; HttpOnly;
           SameSite=Lax]
       status: [200 OK]
       strict-transport-security: [max-age=631139040; includeSubdomains]
@@ -29,36 +29,36 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [8e258faa-33e5-424d-8121-9dcac545d0a0]
-      x-runtime: ['0.028630']
+      x-request-id: [95eae6ec-a97f-49cc-8744-47fc6806e18c]
+      x-runtime: ['0.034195']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/hostgroups?per_page=4294967296&search=title%3D%22New+host+group%22&thin=True
+    uri: https://centos7-katello-3-12/api/hostgroups?per_page=4294967296&search=title%3D%22New+host+group%22&thin=True
   response:
-    body: {string: !!python/unicode "{\n  \"total\": 4,\n  \"subtotal\": 1,\n  \"page\":
+    body: {string: !!python/unicode "{\n  \"total\": 3,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"New host group\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"subnet_id\":16,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":8,\"operatingsystem_name\":\"TestOS
-        7.6\",\"domain_id\":30,\"domain_name\":\"foo.example.com\",\"environment_id\":1,\"environment_name\":\"production\",\"compute_profile_id\":11,\"compute_profile_name\":\"myprofile\",\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"ptable_id\":129,\"ptable_name\":\"Part
-        table\",\"medium_id\":24,\"medium_name\":\"TestOS Mirror\",\"pxe_loader\":\"Grub2
-        UEFI\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-07-23
-        18:58:28 UTC\",\"updated_at\":\"2019-07-23 18:58:28 UTC\",\"id\":71,\"name\":\"New
-        host group\",\"title\":\"New host group\",\"description\":\"New host group\",\"puppet_proxy_id\":1,\"puppet_proxy_name\":\"foreman.example.com\",\"puppet_ca_proxy_id\":1,\"puppet_ca_proxy_name\":\"foreman.example.com\",\"openscap_proxy_id\":null,\"openscap_proxy_name\":null,\"puppet_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"puppet_ca_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"openscap_proxy\":null}]\n}\n"}
+        [{\"subnet_id\":5,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":7,\"operatingsystem_name\":\"TestOS
+        7.6\",\"domain_id\":10,\"domain_name\":\"foo.example.com\",\"environment_id\":1,\"environment_name\":\"production\",\"compute_profile_id\":8,\"compute_profile_name\":\"myprofile\",\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"ptable_id\":120,\"ptable_name\":\"Part
+        table\",\"medium_id\":14,\"medium_name\":\"TestOS Mirror\",\"pxe_loader\":\"Grub2
+        UEFI\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-08-03
+        07:48:06 UTC\",\"updated_at\":\"2019-08-03 07:48:06 UTC\",\"id\":13,\"name\":\"New
+        host group\",\"title\":\"New host group\",\"description\":\"New host group\",\"puppet_proxy_id\":1,\"puppet_proxy_name\":\"centos7-katello-3-12.anubis.example.com\",\"puppet_ca_proxy_id\":1,\"puppet_ca_proxy_name\":\"centos7-katello-3-12.anubis.example.com\",\"puppet_proxy\":{\"name\":\"centos7-katello-3-12.anubis.example.com\",\"id\":1,\"url\":\"https://centos7-katello-3-12.anubis.example.com:9090\"},\"puppet_ca_proxy\":{\"name\":\"centos7-katello-3-12.anubis.example.com\",\"id\":1,\"url\":\"https://centos7-katello-3-12.anubis.example.com:9090\"}}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"864e44a5b0025dc63453416ee487edba"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"91ddf39ed62ab242acc1f6e4ecb18e88"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -71,33 +71,33 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [b27c688c-312b-4633-b2ce-103b04b89c37]
-      x-runtime: ['0.030847']
+      x-request-id: [da4076bb-ec28-4933-a8f9-4c1ad0e94ca8]
+      x-runtime: ['0.034878']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/organizations?per_page=4294967296&search=name%3D%22Test+Org1%22&thin=True
+    uri: https://centos7-katello-3-12/api/organizations?per_page=4294967296&search=name%3D%22Test+Org1%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 3,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"name=\\\"Test Org1\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-07-23
-        18:58:13 UTC\",\"updated_at\":\"2019-07-23 18:58:13 UTC\",\"id\":62,\"name\":\"Test
+        [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-08-03
+        07:47:53 UTC\",\"updated_at\":\"2019-08-03 07:47:53 UTC\",\"id\":28,\"name\":\"Test
         Org1\",\"title\":\"Test Org1\",\"description\":\"A test organization\"}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"14b105d044a0cf7be19e1cb65db7001c"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"6f8af37fda0996259239a87c06731ab7"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -110,33 +110,33 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [3126e72d-4afe-4875-a58c-07ec35ceb635]
-      x-runtime: ['0.015615']
+      x-request-id: [6c5f56ab-68c2-4113-a45a-ecb9aabed335]
+      x-runtime: ['0.017887']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/organizations?per_page=4294967296&search=name%3D%22Test+Org2%22&thin=True
+    uri: https://centos7-katello-3-12/api/organizations?per_page=4294967296&search=name%3D%22Test+Org2%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 3,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"name=\\\"Test Org2\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-07-23
-        18:58:15 UTC\",\"updated_at\":\"2019-07-23 18:58:15 UTC\",\"id\":63,\"name\":\"Test
+        [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-08-03
+        07:47:54 UTC\",\"updated_at\":\"2019-08-03 07:47:54 UTC\",\"id\":29,\"name\":\"Test
         Org2\",\"title\":\"Test Org2\",\"description\":\"A test organization\"}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"918fd5aaeb203120a9d55dad812272ed"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"25f5ceb596937e621c412d928be9a666"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -149,31 +149,31 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [8b08b984-86af-4130-b7d5-055305c851da]
-      x-runtime: ['0.015991']
+      x-request-id: [750a926a-61aa-444a-b3e2-b8ea2d151772]
+      x-runtime: ['0.018211']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/locations?per_page=4294967296&search=title%3D%22Foo%22&thin=True
+    uri: https://centos7-katello-3-12/api/locations?per_page=4294967296&search=title%3D%22Foo%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 4,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"Foo\\\"\",\n  \"sort\":
-        {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\": [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-07-22
-        09:34:29 UTC\",\"updated_at\":\"2019-07-22 09:34:29 UTC\",\"id\":3,\"name\":\"Foo\",\"title\":\"Foo\",\"description\":null}]\n}\n"}
+        {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\": [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-07-28
+        18:57:46 UTC\",\"updated_at\":\"2019-07-28 18:57:46 UTC\",\"id\":3,\"name\":\"Foo\",\"title\":\"Foo\",\"description\":null}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"d930dd013410ab29a44fb67ae3e55fb2"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"51904b7d578611f5ba34a56ad4db3248"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -186,32 +186,32 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [15f5d88b-4ae5-48b5-abc6-2c89fd47621f]
-      x-runtime: ['0.019867']
+      x-request-id: [18271fa8-20ca-4481-b247-e46fbff36c76]
+      x-runtime: ['0.017864']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/locations?per_page=4294967296&search=title%3D%22Foo%2FBaz%22&thin=True
+    uri: https://centos7-katello-3-12/api/locations?per_page=4294967296&search=title%3D%22Foo%2FBaz%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 4,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"Foo/Baz\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"ancestry\":\"3\",\"parent_id\":3,\"parent_name\":\"Foo\",\"created_at\":\"2019-07-23
-        18:58:08 UTC\",\"updated_at\":\"2019-07-23 18:58:08 UTC\",\"id\":60,\"name\":\"Baz\",\"title\":\"Foo/Baz\",\"description\":null}]\n}\n"}
+        [{\"ancestry\":\"3\",\"parent_id\":3,\"parent_name\":\"Foo\",\"created_at\":\"2019-08-03
+        07:47:50 UTC\",\"updated_at\":\"2019-08-03 07:47:50 UTC\",\"id\":26,\"name\":\"Baz\",\"title\":\"Foo/Baz\",\"description\":null}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"0f88d5a00949a4f2287b6e6f56ef80d8"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"9333c4c28497da55041feed39050572f"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -224,31 +224,31 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [0d1cfe9f-c2c5-4692-8001-f86e810736b2]
-      x-runtime: ['0.029562']
+      x-request-id: [7fc8cd77-ce50-4ff1-b108-2c6158688c86]
+      x-runtime: ['0.018437']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/locations?per_page=4294967296&search=title%3D%22Bar%22&thin=True
+    uri: https://centos7-katello-3-12/api/locations?per_page=4294967296&search=title%3D%22Bar%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 4,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"Bar\\\"\",\n  \"sort\":
-        {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\": [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-07-23
-        18:58:11 UTC\",\"updated_at\":\"2019-07-23 18:58:11 UTC\",\"id\":61,\"name\":\"Bar\",\"title\":\"Bar\",\"description\":null}]\n}\n"}
+        {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\": [{\"ancestry\":null,\"parent_id\":null,\"parent_name\":null,\"created_at\":\"2019-08-03
+        07:47:51 UTC\",\"updated_at\":\"2019-08-03 07:47:51 UTC\",\"id\":27,\"name\":\"Bar\",\"title\":\"Bar\",\"description\":null}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"790b5989b88e67f9f316f50ecc78a5fe"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"cf0fd5069f547b245f1b6a699f09b40d"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -261,32 +261,32 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [0c7f295f-b1d8-4388-8c97-d9baa4db431b]
-      x-runtime: ['0.017516']
+      x-request-id: [198381fa-dcdd-4559-8f3e-366336fb584b]
+      x-runtime: ['0.017312']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/architectures?per_page=4294967296&search=name%3D%22x86_64%22&thin=True
+    uri: https://centos7-katello-3-12/api/architectures?per_page=4294967296&search=name%3D%22x86_64%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 2,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"name=\\\"x86_64\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"created_at\":\"2019-07-22 08:56:47 UTC\",\"updated_at\":\"2019-07-22 08:56:47
+        [{\"created_at\":\"2019-07-19 09:01:48 UTC\",\"updated_at\":\"2019-07-19 09:01:48
         UTC\",\"name\":\"x86_64\",\"id\":1}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"fed60974fa20a6f0827f23708be24386"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"15d6f09dc0ed8f75f76281bd6d9f5bb0"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -299,33 +299,33 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [d52a3924-59c1-46da-9ba4-1bfc00e2dcbc]
-      x-runtime: ['0.016790']
+      x-request-id: [dda178c1-c987-48ae-ba64-6223f9f7a530]
+      x-runtime: ['0.020175']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/operatingsystems?per_page=4294967296&search=title%3D%22TestOS+7.6%22&thin=True
+    uri: https://centos7-katello-3-12/api/operatingsystems?per_page=4294967296&search=title%3D%22TestOS+7.6%22&thin=True
   response:
-    body: {string: !!python/unicode "{\n  \"total\": 3,\n  \"subtotal\": 1,\n  \"page\":
+    body: {string: !!python/unicode "{\n  \"total\": 2,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"TestOS 7.6\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
         [{\"description\":null,\"major\":\"7\",\"minor\":\"6\",\"family\":\"Redhat\",\"release_name\":\"reverse
-        whip\",\"password_hash\":\"SHA256\",\"created_at\":\"2019-07-23 18:58:21 UTC\",\"updated_at\":\"2019-07-23
-        18:58:21 UTC\",\"id\":8,\"name\":\"TestOS\",\"title\":\"TestOS 7.6\"}]\n}\n"}
+        whip\",\"password_hash\":\"SHA256\",\"created_at\":\"2019-08-03 07:47:59 UTC\",\"updated_at\":\"2019-08-03
+        07:47:59 UTC\",\"id\":7,\"name\":\"TestOS\",\"title\":\"TestOS 7.6\"}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"caab5fe5a8ad574059f066c4ea2172c1"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"f345e6216b52cdfec48f8f7e94dab9ab"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -338,33 +338,33 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [ef84caeb-4448-4a06-8db8-890a393ee4dd]
-      x-runtime: ['0.019242']
+      x-request-id: [dda6e284-cea5-4794-ba9d-cdc7ab534a0b]
+      x-runtime: ['0.017211']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/media?per_page=4294967296&search=name%3D%22TestOS+Mirror%22&thin=True
+    uri: https://centos7-katello-3-12/api/media?per_page=4294967296&search=name%3D%22TestOS+Mirror%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 10,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"name=\\\"TestOS Mirror\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"path\":\"https://templeos.org/TempleOS.ISO\",\"os_family\":\"Redhat\",\"created_at\":\"2019-07-23
-        18:58:22 UTC\",\"updated_at\":\"2019-07-23 18:58:22 UTC\",\"id\":24,\"name\":\"TestOS
+        [{\"path\":\"https://templeos.org/TempleOS.ISO\",\"os_family\":\"Redhat\",\"created_at\":\"2019-08-03
+        07:48:00 UTC\",\"updated_at\":\"2019-08-03 07:48:00 UTC\",\"id\":14,\"name\":\"TestOS
         Mirror\"}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"bb57078a3c5259249bdc2132fff24730"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"747fcc2906685e7392d7f217f8a2a838"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -377,32 +377,32 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [1af0d435-b96b-474d-9157-d8e6db410c47]
-      x-runtime: ['0.018696']
+      x-request-id: [7e3e29cc-c19d-49c0-abed-5852d5b60e9b]
+      x-runtime: ['0.017874']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/ptables?per_page=4294967296&search=name%3D%22Part+table%22&thin=True
+    uri: https://centos7-katello-3-12/api/ptables?per_page=4294967296&search=name%3D%22Part+table%22&thin=True
   response:
     body: {string: !!python/unicode "{\n  \"total\": 16,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"name=\\\"Part table\\\"\",\n
         \ \"sort\": {\n    \"by\": null,\n    \"order\": null\n  },\n  \"results\":
-        [{\"os_family\":\"Redhat\",\"created_at\":\"2019-07-23 18:58:20 UTC\",\"updated_at\":\"2019-07-23
-        18:58:20 UTC\",\"name\":\"Part table\",\"id\":129}]\n}\n"}
+        [{\"os_family\":\"Redhat\",\"created_at\":\"2019-08-03 07:47:58 UTC\",\"updated_at\":\"2019-08-03
+        07:47:58 UTC\",\"name\":\"Part table\",\"id\":120}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"af97e9c26f6fe022ba8d764d95230f81"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"120a64f554f0d58824e73a99fec50c28"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -415,36 +415,36 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [686c140e-e8c2-4bea-9237-9f926047943b]
-      x-runtime: ['0.020501']
+      x-request-id: [25d14c37-69b1-4e27-b3ed-d4cb89c15f48]
+      x-runtime: ['0.018218']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/hostgroups?per_page=4294967296&search=title%3D%22New+host+group%2FNested+New+host+group+2%22&thin=False
+    uri: https://centos7-katello-3-12/api/hostgroups?per_page=4294967296&search=title%3D%22New+host+group%2FNested+New+host+group+2%22&thin=False
   response:
-    body: {string: !!python/unicode "{\n  \"total\": 4,\n  \"subtotal\": 1,\n  \"page\":
+    body: {string: !!python/unicode "{\n  \"total\": 3,\n  \"subtotal\": 1,\n  \"page\":
         1,\n  \"per_page\": 4294967296,\n  \"search\": \"title=\\\"New host group/Nested
         New host group 2\\\"\",\n  \"sort\": {\n    \"by\": null,\n    \"order\":
-        null\n  },\n  \"results\": [{\"subnet_id\":null,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":8,\"operatingsystem_name\":\"TestOS
-        7.6\",\"domain_id\":null,\"domain_name\":\"foo.example.com\",\"environment_id\":null,\"environment_name\":\"production\",\"compute_profile_id\":null,\"compute_profile_name\":\"myprofile\",\"ancestry\":\"71\",\"parent_id\":71,\"parent_name\":\"New
-        host group\",\"ptable_id\":129,\"ptable_name\":\"Part table\",\"medium_id\":24,\"medium_name\":\"TestOS
-        Mirror\",\"pxe_loader\":\"PXELinux BIOS\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-07-23
-        18:58:34 UTC\",\"updated_at\":\"2019-07-23 18:58:34 UTC\",\"id\":73,\"name\":\"Nested
-        New host group 2\",\"title\":\"New host group/Nested New host group 2\",\"description\":null,\"puppet_proxy_id\":null,\"puppet_proxy_name\":\"foreman.example.com\",\"puppet_ca_proxy_id\":null,\"puppet_ca_proxy_name\":\"foreman.example.com\",\"openscap_proxy_id\":null,\"openscap_proxy_name\":null,\"puppet_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"puppet_ca_proxy\":{\"name\":\"foreman.example.com\",\"id\":1,\"url\":\"https://foreman.example.com:9090\"},\"openscap_proxy\":null}]\n}\n"}
+        null\n  },\n  \"results\": [{\"subnet_id\":null,\"subnet_name\":\"Test subnet4\",\"operatingsystem_id\":7,\"operatingsystem_name\":\"TestOS
+        7.6\",\"domain_id\":null,\"domain_name\":\"foo.example.com\",\"environment_id\":null,\"environment_name\":\"production\",\"compute_profile_id\":null,\"compute_profile_name\":\"myprofile\",\"ancestry\":\"13\",\"parent_id\":13,\"parent_name\":\"New
+        host group\",\"ptable_id\":120,\"ptable_name\":\"Part table\",\"medium_id\":14,\"medium_name\":\"TestOS
+        Mirror\",\"pxe_loader\":\"PXELinux BIOS\",\"subnet6_id\":null,\"subnet6_name\":null,\"architecture_id\":1,\"architecture_name\":\"x86_64\",\"realm_id\":null,\"realm_name\":null,\"created_at\":\"2019-08-03
+        07:48:11 UTC\",\"updated_at\":\"2019-08-03 07:48:11 UTC\",\"id\":15,\"name\":\"Nested
+        New host group 2\",\"title\":\"New host group/Nested New host group 2\",\"description\":null,\"puppet_proxy_id\":null,\"puppet_proxy_name\":\"centos7-katello-3-12.anubis.example.com\",\"puppet_ca_proxy_id\":null,\"puppet_ca_proxy_name\":\"centos7-katello-3-12.anubis.example.com\",\"puppet_proxy\":{\"name\":\"centos7-katello-3-12.anubis.example.com\",\"id\":1,\"url\":\"https://centos7-katello-3-12.anubis.example.com:9090\"},\"puppet_ca_proxy\":{\"name\":\"centos7-katello-3-12.anubis.example.com\",\"id\":1,\"url\":\"https://centos7-katello-3-12.anubis.example.com:9090\"}}]\n}\n"}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"8049d3b59d6dc52718f2050175cf69b6"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"0d7629e81f1e51dc061e40097bb8d533"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -457,35 +457,35 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [df4fc3c0-1101-4df8-8ac0-252eb4902794]
-      x-runtime: ['0.060356']
+      x-request-id: [4c86695a-4bec-4b0e-99fe-78f2536bd1c1]
+      x-runtime: ['0.049481']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 - request:
     body: null
     headers:
       Accept: [application/json;version=2]
-      Cookie: [_session_id=6ca0cefd477303cadde4195b74c46b69]
+      Cookie: [_session_id=0ad539cd27419f5a9847b5ace4f84afd]
     method: GET
-    uri: https://foreman.example.com/api/hostgroups/73
+    uri: https://centos7-katello-3-12/api/hostgroups/15
   response:
     body: {string: !!python/unicode '{"content_source_id":null,"content_source_name":null,"content_view_id":null,"content_view_name":null,"lifecycle_environment_id":null,"lifecycle_environment_name":null,"kickstart_repository_id":null,"kickstart_repository_name":null,"subnet_id":null,"subnet_name":"Test
-        subnet4","operatingsystem_id":8,"operatingsystem_name":"TestOS 7.6","domain_id":null,"domain_name":"foo.example.com","environment_id":null,"environment_name":"production","compute_profile_id":null,"compute_profile_name":"myprofile","ancestry":"71","parent_id":71,"parent_name":"New
-        host group","ptable_id":129,"ptable_name":"Part table","medium_id":24,"medium_name":"TestOS
-        Mirror","pxe_loader":"PXELinux BIOS","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-07-23
-        18:58:34 UTC","updated_at":"2019-07-23 18:58:34 UTC","id":73,"name":"Nested
-        New host group 2","title":"New host group/Nested New host group 2","description":null,"puppet_proxy_id":null,"puppet_proxy_name":"foreman.example.com","puppet_ca_proxy_id":null,"puppet_ca_proxy_name":"foreman.example.com","openscap_proxy_id":null,"openscap_proxy_name":null,"puppet_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"puppet_ca_proxy":{"name":"foreman.example.com","id":1,"url":"https://foreman.example.com:9090"},"openscap_proxy":null,"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[],"all_puppetclasses":[],"locations":[{"id":61,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":60,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":62,"name":"Test
-        Org1","title":"Test Org1","description":"A test organization"},{"id":63,"name":"Test
+        subnet4","operatingsystem_id":7,"operatingsystem_name":"TestOS 7.6","domain_id":null,"domain_name":"foo.example.com","environment_id":null,"environment_name":"production","compute_profile_id":null,"compute_profile_name":"myprofile","ancestry":"13","parent_id":13,"parent_name":"New
+        host group","ptable_id":120,"ptable_name":"Part table","medium_id":14,"medium_name":"TestOS
+        Mirror","pxe_loader":"PXELinux BIOS","subnet6_id":null,"subnet6_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2019-08-03
+        07:48:11 UTC","updated_at":"2019-08-03 07:48:11 UTC","id":15,"name":"Nested
+        New host group 2","title":"New host group/Nested New host group 2","description":null,"puppet_proxy_id":null,"puppet_proxy_name":"centos7-katello-3-12.anubis.example.com","puppet_ca_proxy_id":null,"puppet_ca_proxy_name":"centos7-katello-3-12.anubis.example.com","puppet_proxy":{"name":"centos7-katello-3-12.anubis.example.com","id":1,"url":"https://centos7-katello-3-12.anubis.example.com:9090"},"puppet_ca_proxy":{"name":"centos7-katello-3-12.anubis.example.com","id":1,"url":"https://centos7-katello-3-12.anubis.example.com:9090"},"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[],"all_puppetclasses":[],"locations":[{"id":27,"name":"Bar","title":"Bar","description":null},{"id":3,"name":"Foo","title":"Foo","description":null},{"id":26,"name":"Baz","title":"Foo/Baz","description":null}],"organizations":[{"id":28,"name":"Test
+        Org1","title":"Test Org1","description":"A test organization"},{"id":29,"name":"Test
         Org2","title":"Test Org2","description":"A test organization"}]}'}
     headers:
-      apipie-checksum: [a4d0e078d6a68d7651b77beaa06ba647e859711a]
+      apipie-checksum: [5adea7a94ce02bd4ebd4e9df5046899d962d1188]
       cache-control: ['max-age=0, private, must-revalidate']
       content-security-policy: ['default-src ''self''; child-src ''self''; connect-src
           ''self'' ws: wss:; img-src ''self'' data: *.gravatar.com; script-src ''unsafe-eval''
           ''unsafe-inline'' ''self''; style-src ''unsafe-inline'' ''self''']
       content-type: [application/json; charset=utf-8]
-      date: ['Tue, 23 Jul 2019 18:58:35 GMT']
-      etag: [W/"f28b082372cc2fdd9fc75b9e410efd40"]
+      date: ['Sat, 03 Aug 2019 07:48:12 GMT']
+      etag: [W/"9fdda3dbab6d270639ce21ae36ce24b4"]
       foreman_api_version: ['2']
       foreman_version: [1.22.0]
       server: [Apache]
@@ -498,8 +498,8 @@ interactions:
       x-frame-options: [sameorigin]
       x-permitted-cross-domain-policies: [none]
       x-powered-by: [Phusion Passenger 4.0.53]
-      x-request-id: [96ad1455-d641-4c4e-ae0c-d9bbc77fa7a1]
-      x-runtime: ['0.091120']
+      x-request-id: [5c92f9bd-4b77-4eec-9272-d650d0a8b47a]
+      x-runtime: ['0.078469']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 version: 1

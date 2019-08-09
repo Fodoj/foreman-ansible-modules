@@ -27,14 +27,16 @@ MODULES = [
     'host_collection',
     'installation_medium',
     'job_template',
+    'katello_manifest',
     'lifecycle_environment',
     'location',
-    'operating_system',
+    'operatingsystem',
     'organization',
     'os_default_template',
     'product',
     'provisioning_template',
     'ptable',
+    'realm',
     'redhat_manifest',
     'repository',
     'repository_set',
@@ -42,6 +44,7 @@ MODULES = [
     'role',
     'search_facts',
     'setting',
+    'snapshot',
     'subnet',
     'sync_plan',
     'upload',
@@ -109,5 +112,4 @@ def run_playbook(module, extra_vars=None, limit=None):
 @pytest.mark.parametrize('module', MODULES)
 def test_crud(tmpdir, module, record):
     run = run_playbook_vcr(tmpdir, module, record=record)
-    print(run.stdout.read())
     assert run.rc == 0

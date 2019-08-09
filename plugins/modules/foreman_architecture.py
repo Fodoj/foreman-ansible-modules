@@ -79,21 +79,12 @@ RETURN = ''' # '''
 from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule
 
 
-# This is the only true source for names (and conversions thereof)
-entity_spec = {
-    'id': {},
-    'name': {},
-    'operatingsystems': {'type': 'entity_list', 'flat_name': 'operatingsystem_ids'},
-}
-
-
 def main():
     module = ForemanEntityApypieAnsibleModule(
-        argument_spec=dict(
+        entity_spec=dict(
             name=dict(required=True),
-            operatingsystems=dict(type='list'),
+            operatingsystems=dict(type='entity_list', flat_name='operatingsystem_ids'),
         ),
-        entity_spec=entity_spec,
     )
 
     entity_dict = module.clean_params()
@@ -102,8 +93,7 @@ def main():
 
     if not module.desired_absent:
         if 'operatingsystems' in entity_dict:
-            search_list = ["title~{}".format(title) for title in entity_dict['operatingsystems']]
-            entity_dict['operatingsystems'] = module.find_resources('operatingsystems', search_list, thin=True)
+            entity_dict['operatingsystems'] = module.find_operatingsystems(entity_dict['operatingsystems'], thin=True)
 
     entity = module.find_resource_by_name('architectures', name=entity_dict['name'], failsafe=True)
 
