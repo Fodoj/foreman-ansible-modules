@@ -17,10 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
-ANSIBLE_METADATA = {'metadata_version': '1.0',
+ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
-
 
 DOCUMENTATION = '''
 ---
@@ -152,7 +151,7 @@ EXAMPLES = '''
 RETURN = ''' # '''
 
 from ansible.module_utils.foreman_helper import (
-    ForemanEntityApypieAnsibleModule,
+    ForemanEntityAnsibleModule,
 )
 
 
@@ -334,7 +333,7 @@ locale_list = [
 
 
 def main():
-    module = ForemanEntityApypieAnsibleModule(
+    module = ForemanEntityAnsibleModule(
         entity_spec=dict(
             login=dict(required=True, aliases=['name']),
             firstname=dict(required=False),
@@ -358,7 +357,7 @@ def main():
 
     module.connect()
 
-    search = 'login="{}"'.format(entity_dict['name'])
+    search = 'login="{}"'.format(entity_dict['login'])
     entity = module.find_resource('users', search, failsafe=True)
 
     if not module.desired_absent:

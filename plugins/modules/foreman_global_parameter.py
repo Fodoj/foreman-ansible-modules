@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
-ANSIBLE_METADATA = {'metadata_version': '1.0',
+ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -28,7 +28,6 @@ module: foreman_global_parameter
 short_description: Manage Foreman Global Parameters
 description:
   - "Manage Foreman Global Parameter Entities"
-  - "Uses https://github.com/SatelliteQE/nailgun"
 author:
   - "Bernhard Hopfenmueller (@Fobhep) ATIX AG"
   - "Matthias Dellweg (@mdellweg) ATIX AG"
@@ -100,11 +99,11 @@ EXAMPLES = '''
 RETURN = ''' # '''
 
 
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_value_to_str
+from ansible.module_utils.foreman_helper import ForemanEntityAnsibleModule, parameter_value_to_str
 
 
 def main():
-    module = ForemanEntityApypieAnsibleModule(
+    module = ForemanEntityAnsibleModule(
         entity_spec=dict(
             name=dict(required=True),
             value=dict(type='raw'),

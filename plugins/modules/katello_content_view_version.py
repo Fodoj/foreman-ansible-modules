@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
 DOCUMENTATION = '''
 ---
 module: katello_content_view_version
@@ -240,6 +244,7 @@ def main():
         content_view_version = None
 
     changed = False
+    le_changed = False
     if state == 'present':
         if content_view_version is None:
             kwargs = dict(data=dict())

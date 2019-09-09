@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
 DOCUMENTATION = '''
 ---
 module: foreman_compute_attribute
@@ -37,10 +41,12 @@ options:
     description:
       - Name of compute profile
     required: true
-  vm_attributes:
+  vm_attrs:
     description:
       - Hash containing the data of vm_attrs
     required: true
+    aliases:
+      - vm_attributes
 extends_documentation_fragment: foreman
 '''
 
@@ -50,6 +56,8 @@ EXAMPLES = '''
     username: "admin"
     password: "changeme"
     server_url: "https://foreman.example.com"
+    compute_profile: "Test Compute Profile"
+    compute_resource: "Test Compute Resource"
     vm_attrs:
       memory_mb: '2048'
       cpu: '2'
@@ -60,6 +68,8 @@ EXAMPLES = '''
     username: "admin"
     password: "changeme"
     server_url: "https://foreman.example.com"
+    compute_profile: "Test Compute Profile"
+    compute_resource: "Test Compute Resource"
     vm_attrs:
       memory_mb: '1024'
       cpu: '1'
@@ -68,15 +78,15 @@ EXAMPLES = '''
 
 RETURN = ''' # '''
 
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule
+from ansible.module_utils.foreman_helper import ForemanEntityAnsibleModule
 
 
 def main():
-    module = ForemanEntityApypieAnsibleModule(
+    module = ForemanEntityAnsibleModule(
         entity_spec=dict(
             compute_profile=dict(required=True, type='entity', flat_name='compute_profile_id'),
             compute_resource=dict(required=True, type='entity', flat_name='compute_resource_id'),
-            vm_attrs=dict(type='dict'),
+            vm_attrs=dict(type='dict', aliases=['vm_attributes']),
         ),
     )
     entity_dict = module.clean_params()
@@ -89,12 +99,7 @@ def main():
 
     entity_dict['compute_profile'] = module.find_resource_by_name('compute_profiles', name=entity_dict['compute_profile'], failsafe=False, thin=True)
 
-    entities = list(filter(lambda item: item.get('compute_profile_id') == entity_dict['compute_profile']['id'], compute_attributes))
-
-    if entities:
-        entity = entities[0]
-    else:
-        entity = None
+    entity = next((item for item in compute_attributes if item.get('compute_profile_id') == entity_dict['compute_profile']['id']), None)
 
     changed = module.ensure_entity_state('compute_attributes', entity_dict, entity)
 

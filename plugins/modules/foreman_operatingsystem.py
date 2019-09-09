@@ -18,10 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
-ANSIBLE_METADATA = {'metadata_version': '1.0',
+ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
-
 
 DOCUMENTATION = '''
 ---
@@ -166,11 +165,11 @@ EXAMPLES = '''
 RETURN = ''' # '''
 
 
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_entity_spec
+from ansible.module_utils.foreman_helper import ForemanEntityAnsibleModule, parameter_entity_spec
 
 
 def main():
-    module = ForemanEntityApypieAnsibleModule(
+    module = ForemanEntityAnsibleModule(
         entity_spec=dict(
             name=dict(),
             release_name=dict(),
@@ -236,10 +235,10 @@ def main():
 
     parameters = entity_dict.get('parameters')
 
-    changed, operating_system = module.ensure_entity('operatingsystems', entity_dict, entity)
+    changed, operatingsystem = module.ensure_entity('operatingsystems', entity_dict, entity)
 
-    if operating_system:
-        scope = {'operatingsystem_id': operating_system['id']}
+    if operatingsystem:
+        scope = {'operatingsystem_id': operatingsystem['id']}
         changed |= module.ensure_scoped_parameters(scope, entity, parameters)
 
     module.exit_json(changed=changed)

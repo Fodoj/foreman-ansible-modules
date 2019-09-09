@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
 DOCUMENTATION = '''
 ---
 module: foreman_subnet
@@ -44,7 +48,6 @@ options:
   domains:
     description: List of DNS domains the subnet should assigned to
     required: false
-    default: None
     type: list
   gateway:
     description: Subnet gateway IP address
@@ -91,7 +94,6 @@ options:
       - Remote execution Smart proxies for this subnet
       - This option is only available, if the remote_execution plugin is installed.
     required: false
-    default: None
     type: list
   vlanid:
     description: VLAN ID
@@ -102,12 +104,10 @@ options:
   organizations:
     description: List of oganizations the subnet should be assigned to
     required: false
-    default: None
     type: list
   locations:
     description: List of locations the subnet should be assigned to
     required: false
-    default: None
     type: list
   parameters:
     description:
@@ -177,11 +177,11 @@ RETURN = ''' # '''
 
 
 from netaddr import IPNetwork
-from ansible.module_utils.foreman_helper import ForemanEntityApypieAnsibleModule, parameter_entity_spec
+from ansible.module_utils.foreman_helper import ForemanEntityAnsibleModule, parameter_entity_spec
 
 
 def main():
-    module = ForemanEntityApypieAnsibleModule(
+    module = ForemanEntityAnsibleModule(
         entity_spec=dict(
             name=dict(required=True),
             network_type=dict(choices=['IPv4', 'IPv6'], default='IPv4'),

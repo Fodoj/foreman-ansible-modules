@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+ANSIBLE_METADATA = {'metadata_version': '1.1',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
+
 DOCUMENTATION = '''
 ---
 module: katello_manifest
@@ -63,11 +67,11 @@ EXAMPLES = '''
 
 RETURN = ''' # '''
 
-from ansible.module_utils.foreman_helper import KatelloEntityApypieAnsibleModule
+from ansible.module_utils.foreman_helper import KatelloEntityAnsibleModule
 
 
 def main():
-    module = KatelloEntityApypieAnsibleModule(
+    module = KatelloEntityAnsibleModule(
         argument_spec=dict(
             manifest_path=dict(),
             state=dict(default='present', choices=['absent', 'present', 'refreshed']),
@@ -77,6 +81,8 @@ def main():
             ['state', 'present', ['manifest_path']],
         ],
     )
+
+    module.task_timeout = 5 * 60
 
     entity_dict = module.clean_params()
 
@@ -106,9 +112,8 @@ def main():
                 if 'repository_url' in entity_dict:
                     params['repository_url'] = entity_dict['repository_url']
                 params.update(scope)
-                changed, result = module.resource_action('subscriptions', 'upload', params, options={'skip_validation': True}, files=files)
-                task = module.wait_for_task(result, 5 * 60)
-                for error in task['humanized']['errors']:
+                changed, result = module.resource_action('subscriptions', 'upload', params, files=files)
+                for error in result['humanized']['errors']:
                     if "same as existing data" in error:
                         changed = False
                     elif "older than existing data" in error:
@@ -120,11 +125,9 @@ def main():
             module.fail_json(msg="Unable to read the manifest file: %s" % e)
     elif module.desired_absent and existing_manifest:
         changed, result = module.resource_action('subscriptions', 'delete_manifest', scope)
-        task = module.wait_for_task(result)
     elif module.state == 'refreshed':
         if existing_manifest:
             changed, result = module.resource_action('subscriptions', 'refresh_manifest', scope)
-            task = module.wait_for_task(result)
         else:
             module.fail_json(msg="No manifest found to refresh.")
 
