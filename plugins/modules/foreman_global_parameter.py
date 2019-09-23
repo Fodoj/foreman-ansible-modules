@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -32,17 +36,17 @@ author:
   - "Bernhard Hopfenmueller (@Fobhep) ATIX AG"
   - "Matthias Dellweg (@mdellweg) ATIX AG"
   - "Manisha Singhal (@manisha15) ATIX AG"
-requirements:
-  - "apypie"
 options:
   name:
     description:
       - Name of the Global Parameter
     required: true
+    type: str
   value:
     description:
       - Value of the Global Parameter
     required: false
+    type: raw
   parameter_type:
     description:
       - Type of value
@@ -56,15 +60,19 @@ options:
       - hash
       - yaml
       - json
-    note: This parameter has an effect only on foreman >= 1.22
+    type: str
   state:
     description:
       - State of the Global Parameter
+      - C(present_with_defaults) will ensure the entity exists, but won't update existing ones
     default: present
     choices:
       - present
       - present_with_defaults
       - absent
+    type: str
+notes:
+  - The I(parameter_type) only has an effect on Foreman >= 1.22
 extends_documentation_fragment: foreman
 '''
 

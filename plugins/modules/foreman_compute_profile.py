@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -31,22 +35,35 @@ description:
 author:
   - "Philipp Joos (@philippj)"
   - "Baptiste Agasse (@bagasse)"
-requirements:
-  - apypie
 options:
   name:
     description: compute profile name
     required: true
+    type: str
   updated_name:
     description: new compute profile name
     required: false
+    type: str
   compute_attributes:
     description: Compute attributes related to this compute profile. Some of these attributes are specific to the underlying compute resource type
     required: false
+    type: list
+    suboptions:
+      compute_resource:
+        description:
+          - Name of the compute resource the attribute should be for
+        type: str
+      vm_attrs:
+        description:
+          - Hash containing the data of vm_attrs
+        aliases:
+          - vm_attributes
+        type: dict
   state:
     description: compute profile presence
     default: present
     choices: ["present", "absent"]
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -174,6 +191,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-#  vim: set sts=4 ts=8 sw=4 ft=python et noro norl cin si ai :

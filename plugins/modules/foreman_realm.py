@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -29,21 +33,26 @@ description:
   - Manage Foreman Realms
 author:
   - "Lester R Claudio (@claudiol1)"
-requirements:
-  - apypie
 options:
   name:
     description:
       - Name of the Foreman realm
     required: true
+    type: str
   realm_proxy:
     description:
       - Proxy to use for this realm
     required: true
+    type: str
   realm_type:
     description:
-      - Realm type, e.g. FreeIPA or Active Directory or Red Hat Identity Management
+      - Realm type
+    choices:
+      - Red Hat Identity Management
+      - FreeIPA
+      - Active Directory
     required: true
+    type: str
   state:
     description:
       - State of the Realm
@@ -51,6 +60,7 @@ options:
     choices:
       - present
       - absent
+    type: str
 extends_documentation_fragment: foreman
 '''
 

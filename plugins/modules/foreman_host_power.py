@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -31,24 +35,28 @@ description:
 author:
   - "Bernhard Hopfenmueller (@Fobhep) ATIX AG"
   - "Baptiste Agasse (@bagasse)"
-requirements:
-  - "apypie"
 options:
   name:
     description: Name (FQDN) of the host
     required: true
-    alias:
+    aliases:
       - hostname
-  power_state:
+    type: str
+  state:
     description: Desired power state
     default: state
-    type: list
     choices:
-      - on/start
-      - off/stop
-      - soft/reboot
-      - cycle/reset
-      - state/status
+      - 'on'
+      - 'start'
+      - 'off'
+      - 'stop'
+      - 'soft'
+      - 'reboot'
+      - 'cycle'
+      - 'reset'
+      - 'state'
+      - 'status'
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -87,7 +95,7 @@ RETURN = '''
 power_state:
     description: current power state of host
     returned: always
-    type: string
+    type: str
     sample: "off"
  '''
 
@@ -106,10 +114,8 @@ def main():
 
     module.connect()
 
-    entity = module.find_resource_by_name('hosts', name=entity_dict['name'], failsafe=False, thin=True)
-
     params = {'id': entity_dict['name']}
-    _, power_state = module.resource_action('hosts', 'power_status', params=params)
+    _power_state_changed, power_state = module.resource_action('hosts', 'power_status', params=params)
     if module.state in ['state', 'status']:
         module.exit_json(changed=False, power_state=power_state['state'])
     elif ((module.state in ['on', 'start'] and power_state['state'] == 'on')

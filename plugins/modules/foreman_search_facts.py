@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -30,18 +34,18 @@ description:
   - "Gather facts about Foreman resources"
 author:
   - "Sean O'Keeffe (@sean797)"
-requirements:
-  - apypie
 options:
   resource:
     description:
       - Resource to search
       - Set to an invalid choice like I(foo) see all available options.
     required: true
+    type: str
   search:
     description:
       - Search query to use
       - If None, all resources are returned
+    type: str
   full_details:
     description:
       - If C(True) all details about the found resources are returned

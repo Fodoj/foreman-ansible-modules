@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -31,22 +35,24 @@ description:
 author:
   - "Eric D Helms (@ehelms)"
   - "Matthias M Dellweg (@mdellweg) ATIX AG"
-requirements:
-  - "nailgun >= 0.28.0"
 options:
   organization:
     description: Organization that the I(product) is in
     required: true
+    type: str
   product:
     description: Product to which the I(repository) lives in
     required: true
+    type: str
   repository:
     description: |
       Name of the repository to sync
       If omitted, all repositories in I(product) are synched.
+    type: str
   synchronous:
     description: Wait for the Sync task to complete if True. Immediately return if False.
     default: true
+    type: bool
 extends_documentation_fragment: foreman
 ...
 '''

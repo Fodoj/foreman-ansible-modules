@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -31,20 +35,21 @@ description:
 author:
     - "Andrew Kofink (@akofink)"
     - "Matthis Dellweg (@mdellweg) ATIX-AG"
-requirements:
-    - apypie
 options:
   name:
     description:
       - Name of the Katello sync plan
     required: true
+    type: str
   description:
     description:
       - Description of the Katello sync plan
+    type: str
   organization:
     description:
       - Organization that the sync plan is in
     required: true
+    type: str
   interval:
     description:
       - How often synchronization should run
@@ -54,23 +59,35 @@ options:
       - weekly
       - custom cron
     required: true
+    type: str
   enabled:
     description:
       - Whether the sync plan is active
     required: true
+    type: bool
   sync_date:
     description:
       - Start date and time of the first synchronization
     required: true
+    type: str
   cron_expression:
     description:
       - A cron expression as found in crontab files
       - This must be provided together with I(interval='custom cron').
+    type: str
   products:
     description:
       - List of products to include in the sync plan
     required: false
     type: list
+  state:
+    description:
+      - State of the sync plan
+    choices:
+      - present
+      - absent
+    default: present
+    type: str
 extends_documentation_fragment: foreman
 '''
 

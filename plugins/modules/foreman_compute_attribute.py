@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -30,23 +34,32 @@ description:
   - "This beta version can create, and update compute attributes"
 author:
   - "Manisha Singhal (@Manisha15) ATIX AG"
-requirements:
-  - "apypie"
 options:
   compute_resource:
     description:
       - Name of compute resource
     required: true
+    type: str
   compute_profile:
     description:
       - Name of compute profile
     required: true
+    type: str
   vm_attrs:
     description:
       - Hash containing the data of vm_attrs
     required: true
     aliases:
       - vm_attributes
+    type: dict
+  state:
+    description:
+      - State of the compute attribute
+    choices:
+      - present
+      - absent
+    default: present
+    type: str
 extends_documentation_fragment: foreman
 '''
 

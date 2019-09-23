@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -28,17 +32,17 @@ short_description: Manage Katello manifests
 description:
     - Upload and Manage Katello manifests
 author: "Andrew Kofink (@akofink)"
-requirements:
-    - apypie
 options:
   organization:
     description:
       - Organization that the manifest is in
     required: true
+    type: str
   manifest_path:
     description:
       - Path to the manifest zip file
       - This parameter will be ignored if I(state=absent) or I(state=refreshed)
+    type: path
   state:
     description:
       - The state of the manifest
@@ -47,10 +51,12 @@ options:
       - absent
       - present
       - refreshed
+    type: str
   repository_url:
     description:
        - URL to retrieve content from
     aliases: [ redhat_repository_url ]
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -73,7 +79,7 @@ from ansible.module_utils.foreman_helper import KatelloEntityAnsibleModule
 def main():
     module = KatelloEntityAnsibleModule(
         argument_spec=dict(
-            manifest_path=dict(),
+            manifest_path=dict(type='path'),
             state=dict(default='present', choices=['absent', 'present', 'refreshed']),
             repository_url=dict(aliases=['redhat_repository_url']),
         ),

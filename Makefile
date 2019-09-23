@@ -25,7 +25,7 @@ help:
 	@echo "  record_<test>  to (re-)record the server answers for a specific test"
 
 lint:
-	pycodestyle --ignore=E402,E722,W503 --max-line-length=160 plugins/ tests/
+	flake8 --ignore=E402,W503 --max-line-length=160 plugins/ tests/
 
 test:
 	pytest -v $(TEST)
@@ -40,8 +40,8 @@ record_%: FORCE
 clean_%: FORCE
 	ansible-playbook --tags teardown,cleanup -i tests/inventory/hosts 'tests/test_playbooks/$*.yml'
 
-sanity:
-	ansible-playbook tests/extras/sanity.yml
+sanity: dist-install
+	ansible-playbook $(CURDIR)/tests/extras/sanity.yml -e test_collection_path=$(COLLECTION_INSTALL_TMP)/ansible_collections/theforeman/foreman/
 
 debug:
 ifndef MODULE
@@ -66,11 +66,7 @@ dist:
 	mkdir -p $(COLLECTION_TMP)
 
 	# only copy selected files/folders from our git
-	git archive HEAD LICENSE README.md galaxy.yml plugins | tar -C $(COLLECTION_TMP) -xf -
-
-	# drop nailgun modules, we don't want them shipped
-	rm -f $(COLLECTION_TMP)/plugins/module_utils/ansible_nailgun_cement.py
-	grep -rl ansible_nailgun_cement $(COLLECTION_TMP)/plugins/modules/ | xargs rm -f
+	git archive HEAD LICENSE README.md galaxy.yml plugins tests/sanity | tar -C $(COLLECTION_TMP) -xf -
 
 	# fix the imports to use the collection namespace
 	sed -i '/ansible.module_utils.foreman_helper/ s/ansible.module_utils/ansible_collections.theforeman.foreman.plugins.module_utils/g' $(COLLECTION_TMP)/plugins/modules/*.py
@@ -80,14 +76,16 @@ dist:
 
 	rm -rf $(COLLECTION_TMP)
 
-dist-test: dist
+dist-install: dist
 	mkdir -p $(COLLECTION_INSTALL_TMP)
 
 	ansible-galaxy collection install --collections-path $(COLLECTION_INSTALL_TMP) ./theforeman-foreman-*.tar.gz
 
+dist-test: dist-install
 	ANSIBLE_COLLECTIONS_PATHS=$(COLLECTION_INSTALL_TMP) ansible -m theforeman.foreman.foreman_organization -a "username=admin password=changeme server_url=https://foreman.example.test name=collectiontest" fixtures |grep -q "Failed to connect to Foreman server"
 	ANSIBLE_COLLECTIONS_PATHS=$(COLLECTION_INSTALL_TMP) ansible-doc theforeman.foreman.foreman_organization |grep -q "Manage Foreman Organization"
 
+dist-clean:
 	rm -rf $(COLLECTION_INSTALL_TMP)
 
 doc-setup:

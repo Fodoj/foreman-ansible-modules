@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -30,26 +34,28 @@ description:
   - "This beta version can create and delete hosts from preexisting host groups"
 author:
   - "Bernhard Hopfenmueller (@Fobhep) ATIX AG"
-requirements:
-  - "apypie"
 options:
   name:
     description:
       - Fully Qualified Domain Name of host
     required: true
+    type: str
   hostgroup:
     description:
       - Name of related hostgroup.
       - Required if I(state=present) and (I(managed=true) or I(build=true))
     required: false
+    type: str
   location:
     description:
       - Name of related location
     required: false
+    type: str
   organization:
     description:
       - Name of related organization
     required: false
+    type: str
   build:
     description:
       - Whether or not to setup build context for the host
@@ -70,6 +76,7 @@ options:
     description: host presence
     default: present
     choices: ["present", "absent"]
+    type: str
 extends_documentation_fragment: foreman
 '''
 

@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -28,33 +32,47 @@ short_description: Create and Manage Katello content views
 description:
     - Create and Manage Katello content views
 author: "Eric D Helms (@ehelms)"
-requirements:
-    - apypie
 options:
   name:
     description:
       - Name of the Katello Content View
     required: true
+    type: str
   description:
     description:
       - Description of the Content View
+    type: str
   organization:
     description:
       - Organization that the Content View is in
     required: true
+    type: str
   repositories:
     description:
       - List of repositories that include name and product.
       - Cannot be combined with I(composite=True).
     type: list
+    suboptions:
+      name:
+        description:
+          - Name of the Repository to be added
+        type: str
+        required: true
+      product:
+        description:
+          - Product of the Repository to be added
+        type: str
+        required: true
   state:
     description:
       - State of the content view
+      - C(present_with_defaults) will ensure the entity exists, but won't update existing ones
     default: present
     choices:
       - present
       - present_with_defaults
       - absent
+    type: str
   auto_publish:
     description:
       - Auto publish composite view when a new version of a component content view is created.
@@ -71,6 +89,23 @@ options:
       - List of content views to includes content_view and either version or latest.
       - Ignored if I(composite=False).
     type: list
+    suboptions:
+      content_view:
+        description:
+          - Content View name to be added to the Composite Content View
+        type: str
+        required: true
+      latest:
+        description:
+          - Always use the latest Content View Version
+        type: bool
+        default: False
+      content_view_version:
+        description:
+          - Version of the Content View to add
+        type: str
+        aliases:
+          - version
 extends_documentation_fragment: foreman
 '''
 
@@ -97,7 +132,7 @@ EXAMPLES = '''
     auto_publish: true
     components:
       - content_view: Fedora CV
-        version: 1.0
+        content_view_version: 1.0
       - content_view: Internal CV
         latest: true
 '''
@@ -177,7 +212,7 @@ def main():
             }
             cvc_matched = next((item for item in current_cvcs if item['content_view']['id'] == cvc['content_view']['id']), None)
             if not cvc['latest']:
-                search = "content_view_id={},version={}".format(cvc['content_view']['id'], component['content_view_version'])
+                search = "content_view_id={0},version={1}".format(cvc['content_view']['id'], component['content_view_version'])
                 cvc['content_view_version'] = module.find_resource('content_view_versions', search=search, thin=True)
                 cvc['latest'] = False
                 if cvc_matched and cvc_matched['latest']:

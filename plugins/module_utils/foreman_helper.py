@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 # (c) Matthias Dellweg (ATIX AG) 2017
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 import json
 import re
 import time
 import traceback
-import yaml
+
+from functools import wraps
 
 from ansible.module_utils.basic import AnsibleModule
 
@@ -16,51 +21,18 @@ except ImportError:
     HAS_APYPIE = False
     APYPIE_IMP_ERR = traceback.format_exc()
 
+try:
+    import yaml
+    HAS_PYYAML = True
+except ImportError:
+    HAS_PYYAML = False
+    PYYAML_IMP_ERR = traceback.format_exc()
 
 parameter_entity_spec = dict(
     name=dict(required=True),
     value=dict(type='raw', required=True),
     parameter_type=dict(default='string', choices=['string', 'boolean', 'integer', 'real', 'array', 'hash', 'yaml', 'json']),
 )
-
-
-class ForemanBaseAnsibleModule(AnsibleModule):
-
-    def __init__(self, argument_spec, **kwargs):
-        args = dict(
-            server_url=dict(required=True),
-            username=dict(required=True),
-            password=dict(required=True, no_log=True),
-            validate_certs=dict(type='bool', default=True, aliases=['verify_ssl']),
-        )
-        args.update(argument_spec)
-        supports_check_mode = kwargs.pop('supports_check_mode', True)
-        self._aliases = {alias for arg in args.values() for alias in arg.get('aliases', [])}
-        super(ForemanBaseAnsibleModule, self).__init__(argument_spec=args, supports_check_mode=supports_check_mode, **kwargs)
-
-        self._params = self.params.copy()
-
-        self.check_requirements()
-
-        self._foremanapi_server_url = self._params.pop('server_url')
-        self._foremanapi_username = self._params.pop('username')
-        self._foremanapi_password = self._params.pop('password')
-        self._foremanapi_validate_certs = self._params.pop('validate_certs')
-        if 'verify_ssl' in self._params:
-            self.warn("Please use 'validate_certs' instead of deprecated 'verify_ssl'.")
-
-        self.task_timeout = 60
-        self.task_poll = 4
-
-    def parse_params(self):
-        self.warn("Use of deprecated method parse_params")
-        return {k: v for (k, v) in self._params.items() if v is not None}
-
-    def clean_params(self):
-        return {k: v for (k, v) in self._params.items() if v is not None and k not in self._aliases}
-
-    def get_server_params(self):
-        return (self._foremanapi_server_url, self._foremanapi_username, self._foremanapi_password, self._foremanapi_validate_certs)
 
 
 class KatelloMixin(object):
@@ -148,6 +120,7 @@ class KatelloMixin(object):
 
 def _exception2fail_json(msg='Generic failure: %s'):
     def decor(f):
+        @wraps(f)
         def inner(self, *args, **kwargs):
             try:
                 return f(self, *args, **kwargs)
@@ -157,13 +130,40 @@ def _exception2fail_json(msg='Generic failure: %s'):
     return decor
 
 
-class ForemanAnsibleModule(ForemanBaseAnsibleModule):
+class ForemanAnsibleModule(AnsibleModule):
 
-    def __init__(self, *args, **kwargs):
-        super(ForemanAnsibleModule, self).__init__(*args, **kwargs)
+    def __init__(self, argument_spec, **kwargs):
+        args = dict(
+            server_url=dict(required=True),
+            username=dict(required=True),
+            password=dict(required=True, no_log=True),
+            validate_certs=dict(type='bool', default=True, aliases=['verify_ssl']),
+        )
+        args.update(argument_spec)
+        supports_check_mode = kwargs.pop('supports_check_mode', True)
+        self._aliases = {alias for arg in args.values() for alias in arg.get('aliases', [])}
+        super(ForemanAnsibleModule, self).__init__(argument_spec=args, supports_check_mode=supports_check_mode, **kwargs)
+
+        self._params = self.params.copy()
+
+        self.check_requirements()
+
+        self._foremanapi_server_url = self._params.pop('server_url')
+        self._foremanapi_username = self._params.pop('username')
+        self._foremanapi_password = self._params.pop('password')
+        self._foremanapi_validate_certs = self._params.pop('validate_certs')
+        if 'verify_ssl' in self._params:
+            self.warn("Please use 'validate_certs' instead of deprecated 'verify_ssl'.")
+
+        self.task_timeout = 60
+        self.task_poll = 4
+
         self._thin_default = False
         self.state = 'undefined'
         self.entity_spec = {}
+
+    def clean_params(self):
+        return {k: v for (k, v) in self._params.items() if v is not None and k not in self._aliases}
 
     def _patch_location_api(self):
         """This is a workaround for the broken taxonomies apidoc in foreman.
@@ -295,12 +295,12 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
         return result
 
     def find_resource_by_name(self, resource, name, **kwargs):
-        search = 'name="{}"'.format(name)
+        search = 'name="{0}"'.format(name)
         kwargs['name'] = name
         return self.find_resource(resource, search, **kwargs)
 
     def find_resource_by_title(self, resource, title, **kwargs):
-        search = 'title="{}"'.format(title)
+        search = 'title="{0}"'.format(title)
         return self.find_resource(resource, search, **kwargs)
 
     def find_resources(self, resource, search_list, **kwargs):
@@ -315,7 +315,7 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
     def find_operatingsystem(self, name, params=None, failsafe=False, thin=None):
         result = self.find_resource_by_title('operatingsystems', name, params=params, failsafe=True, thin=thin)
         if not result:
-            search = 'title~"{}"'.format(name)
+            search = 'title~"{0}"'.format(name)
             result = self.find_resource('operatingsystems', search, params=params, failsafe=failsafe, thin=thin)
         return result
 
@@ -323,7 +323,7 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
         return [self.find_operatingsystem(name, **kwargs) for name in names]
 
     def ensure_entity_state(self, *args, **kwargs):
-        changed, _ = self.ensure_entity(*args, **kwargs)
+        changed, _entity = self.ensure_entity(*args, **kwargs)
         return changed
 
     @_exception2fail_json('Failed to ensure entity state: %s')
@@ -345,7 +345,7 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
         if entity_spec is None:
             entity_spec = self.entity_spec
         else:
-            entity_spec, _ = _entity_spec_helper(entity_spec)
+            entity_spec, _dummy = _entity_spec_helper(entity_spec)
 
         changed = False
         updated_entity = None
@@ -368,7 +368,7 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
             if current_entity is not None:
                 changed, updated_entity = self._delete_entity(resource, current_entity, params, synchronous)
         else:
-            self.fail_json(msg='Not a valid state: {}'.format(state))
+            self.fail_json(msg='Not a valid state: {0}'.format(state))
         return changed, updated_entity
 
     def _create_entity(self, resource, desired_entity, params, entity_spec, synchronous):
@@ -491,7 +491,7 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
                 if synchronous and is_foreman_task:
                     result = self.wait_for_task(result)
         except Exception as e:
-            self.fail_json(msg='Error while performing {} on {}: {}'.format(
+            self.fail_json(msg='Error while performing {0} on {1}: {2}'.format(
                 action, resource, str(e)))
         return True, result
 
@@ -500,10 +500,10 @@ class ForemanAnsibleModule(ForemanBaseAnsibleModule):
         while task['state'] not in ['paused', 'stopped']:
             duration -= self.task_poll
             if duration <= 0:
-                self.fail_json(msg="Timout waiting for Task {}".format(task['id']))
+                self.fail_json(msg="Timout waiting for Task {0}".format(task['id']))
             time.sleep(self.task_poll)
 
-            _, task = self.resource_action('foreman_tasks', 'show', {'id': task['id']})
+            _task_changed, task = self.resource_action('foreman_tasks', 'show', {'id': task['id']})
 
         return task
 
@@ -524,9 +524,6 @@ class ForemanEntityAnsibleModule(ForemanAnsibleModule):
         self.state = self._params.pop('state')
         self.desired_absent = self.state == 'absent'
         self._thin_default = self.desired_absent
-
-    def parse_params(self):
-        return (super(ForemanEntityAnsibleModule, self).parse_params(), self.state)
 
     def ensure_scoped_parameters(self, scope, entity, parameters):
         changed = False
@@ -584,7 +581,7 @@ def _entity_spec_helper(spec):
         elif argument_value.get('type') == 'nested_list':
             argument_value['type'] = 'list'
             argument_value['elements'] = 'dict'
-            _, argument_value['options'] = _entity_spec_helper(argument_value.pop('entity_spec'))
+            _dummy, argument_value['options'] = _entity_spec_helper(argument_value.pop('entity_spec'))
             entity_value = None
         if entity_value is not None:
             entity_spec[key] = entity_value
@@ -625,6 +622,9 @@ def parameter_value_to_str(value, parameter_type):
 
 # Helper for templates
 def parse_template(template_content, module):
+    if not HAS_PYYAML:
+        module.fail_json(msg='The PyYAML Python module is required', exception=PYYAML_IMP_ERR)
+
     try:
         template_dict = {}
         data = re.search(

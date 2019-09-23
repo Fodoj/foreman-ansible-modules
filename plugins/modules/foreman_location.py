@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -29,16 +33,16 @@ description:
   - Manage Foreman Location
 author:
   - "Matthias M Dellweg (@mdellweg) ATIX AG"
-requirements:
-  - apypie
 options:
   name:
     description:
       - Name or Title of the Foreman Location
     required: true
+    type: str
   parent:
     description:
       - Title of a parent Location for nesting
+    type: str
   organizations:
     description:
       - List of organizations the location should be assigned to
@@ -50,6 +54,7 @@ options:
     choices:
       - present
       - absent
+    type: str
 extends_documentation_fragment: foreman
 '''
 

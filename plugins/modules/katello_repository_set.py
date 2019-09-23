@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -28,21 +32,22 @@ short_description: Enable/disable repositories in Katello repository sets
 description:
   - Enable/disable repositories in Katello repository sets
 author: "Andrew Kofink (@akofink)"
-requirements:
-  - "apypie"
 options:
   name:
     description:
       - Name of the repository set
     required: false
+    type: str
   product:
     description:
       - Name of the parent product
     required: false
+    type: str
   label:
     description:
       - Label of the repository set, can be used in place of I(name) & I(product)
     required: false
+    type: str
   repositories:
     description:
       - Release version and base architecture of the repositories to enable
@@ -52,13 +57,16 @@ options:
     description:
       - Organization name that the repository set is in
     required: true
+    type: str
   state:
     description:
       - Whether the repositories are enabled or not
-    required: true
+    required: false
     choices:
       - 'enabled'
       - 'disabled'
+    default: enabled
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -158,14 +166,14 @@ def main():
         scope['product_id'] = module_params['product']['id']
 
     if 'label' in module_params:
-        search = 'label="{}"'.format(module_params['label'])
+        search = 'label="{0}"'.format(module_params['label'])
         repo_set = module.find_resource('repository_sets', search=search, params=scope)
     else:
         repo_set = module.find_resource_by_name('repository_sets', name=module_params['name'], params=scope)
     repo_set_scope = {'id': repo_set['id'], 'product_id': repo_set['product']['id']}
     repo_set_scope.update(scope)
 
-    _, available_repos = module.resource_action('repository_sets', 'available_repositories', params=repo_set_scope)
+    _available_repos_changed, available_repos = module.resource_action('repository_sets', 'available_repositories', params=repo_set_scope)
     available_repos = available_repos['results']
     current_repos = repo_set['repositories']
     desired_repos = get_desired_repos(module_params['repositories'], available_repos)
@@ -175,7 +183,7 @@ def main():
     desired_repo_names = set(map(lambda repo: repo['repo_name'], desired_repos))
 
     if len(desired_repo_names - available_repo_names) > 0:
-        module.fail_json(msg="Desired repositories are not available on the repository set {}. Desired: {} Available: {}"
+        module.fail_json(msg="Desired repositories are not available on the repository set {0}. Desired: {1} Available: {2}"
                          .format(module_params['name'], desired_repo_names, available_repo_names))
 
     changed = False

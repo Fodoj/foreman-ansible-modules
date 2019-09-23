@@ -4,7 +4,6 @@ import os
 import sys
 import vcr
 import json
-import re
 
 
 # We need our own json level2 matcher, because, python2 and python3 do not save
@@ -124,6 +123,7 @@ else:
                               record_mode=test_params['record_mode'],
                               match_on=['method', 'path', query_matcher, body_matcher],
                               filter_headers=['Authorization'],
+                              decode_compressed_response=True,
                               ):
         with open(sys.argv[0]) as f:
             code = compile(f.read(), sys.argv[0], 'exec')

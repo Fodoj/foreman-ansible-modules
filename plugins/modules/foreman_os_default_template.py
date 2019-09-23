@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -29,29 +33,32 @@ description:
   - "Manage Foreman OSDefaultTemplate Entities"
 author:
   - "Matthias M Dellweg (@mdellweg) ATIX AG"
-requirements:
-  - apypie
 options:
   operatingsystem:
     description:
       - Name of the Operating System
     required: true
+    type: str
   template_kind:
     description:
       - name of the template kind
     required: true
+    type: str
   provisioning_template:
     description:
       - name of provisioning template
     required: false
+    type: str
   state:
     description:
       - State of the Association
+      - C(present_with_defaults) will ensure the entity exists, but won't update existing ones
     default: present
     choices:
       - present
       - present_with_defaults
       - absent
+    type: str
 extends_documentation_fragment: foreman
 '''
 

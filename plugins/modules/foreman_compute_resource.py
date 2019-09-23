@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -32,25 +36,57 @@ author:
   - "Philipp Joos (@philippj)"
   - "Baptiste Agasse (@bagasse)"
   - "Manisha Singhal (@Manisha15) ATIX AG"
-requirements:
-  - "apypie"
 options:
   name:
     description: compute resource name
     required: true
+    type: str
   updated_name:
     description: new compute resource name
     required: false
+    type: str
   description:
     description: compute resource description
     required: false
+    type: str
   provider:
     description: Compute resource provider. Required if I(state=present_with_defaults).
     required: false
     choices: ["vmware", "libvirt", "ovirt"]
+    type: str
   provider_params:
     description: Parameter specific to compute resource provider. Required if I(state=present_with_defaults).
     required: false
+    type: dict
+    suboptions:
+      url:
+        description:
+          - URL of the compute resource
+        type: str
+      user:
+        description:
+          - Username for the compute resource connection, not valid for I(provider=libvirt)
+        type: str
+      password:
+        description:
+          - Password for the compute resource connection, not valid for I(provider=libvirt)
+        type: str
+      datacenter:
+        description:
+          - Datacenter the compute resource is in, not valid for I(provider=libvirt)
+        type: str
+      display_type:
+        description:
+          - Display type to use for the remote console, only valid for I(provider=libvirt)
+        type: str
+      use_v4:
+        description:
+          - Use oVirt API v4, only valid for I(provider=ovirt)
+        type: bool
+      ovirt_quota:
+        description:
+          - oVirt quota ID, only valid for I(provider=ovirt)
+        type: str
   locations:
     description: List of locations the compute resource should be assigned to
     required: false
@@ -60,10 +96,13 @@ options:
     required: false
     type: list
   state:
-    description: compute resource presence
+    description:
+      - compute resource presence
+      - C(present_with_defaults) will ensure the entity exists, but won't update existing ones
     required: false
     default: present
     choices: ["present", "absent", "present_with_defaults"]
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -228,7 +267,7 @@ def main():
                 if key in provider_params:
                     entity_dict[key] = provider_params.pop(key)
             if provider_params:
-                module.fail_json(msg="Provider {} does not support the following given parameters: {}".format(
+                module.fail_json(msg="Provider {0} does not support the following given parameters: {1}".format(
                     entity_dict['provider'], list(provider_params.keys())))
 
         # Add provider specific params
@@ -241,6 +280,4 @@ def main():
 
 
 if __name__ == '__main__':
-    changed = main()
-
-#  vim: set sts=4 ts=8 sw=4 ft=python et noro norl cin si ai :
+    main()

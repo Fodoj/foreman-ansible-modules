@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -30,13 +34,12 @@ description:
 author:
   - "Bernhard Hopfenmueller (@Fobhep) ATIX AG"
   - "Matthias Dellweg (@mdellweg) ATIX AG"
-requirements:
-  - apypie
 options:
   audit_comment:
     description:
       - Content of the audit comment field
     required: false
+    type: str
   kind:
     description:
       - The provisioning template kind
@@ -55,12 +58,14 @@ options:
       - snippet
       - user_data
       - ZTP
+    type: str
   template:
     description:
       - |
         The content of the provisioning template, either this or file_name
         is required as a source for the Provisioning Template "content".
     required: false
+    type: str
   file_name:
     description:
       - |
@@ -78,9 +83,6 @@ options:
     description:
       - Determines whether the template shall be locked
     required: false
-    choices:
-      - true
-      - false
     type: bool
   name:
     description:
@@ -92,6 +94,7 @@ options:
         The special name "*" (only possible as parameter) is used
         to perform bulk actions (modify, delete) on all existing templates.
     required: false
+    type: str
   organizations:
     description:
       - The organizations the template shall be assigned to
@@ -102,12 +105,15 @@ options:
     required: false
     type: list
   state:
-    description: The state the template should be in.
+    description:
+      - The state the template should be in
+      - C(present_with_defaults) will ensure the entity exists, but won't update existing ones
     default: present
     choices:
       - absent
       - present
       - present_with_defaults
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -157,7 +163,7 @@ EXAMPLES = '''
     template: |
       <%#
           dummy:
-     %>
+      %>
     state: absent
 
 - name: "Create a Provisioning Template from a file and modify with parameter"

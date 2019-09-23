@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -30,38 +34,22 @@ description:
 author:
     - "Maxim Burgerhout (@wzzrd)"
     - "Christoffer Reijer (@ephracis)"
-requirements:
-    - apypie
 options:
-  server_url:
-    description:
-      - URL of Foreman server
-    required: true
-  username:
-    description:
-      - Username on Foreman server
-    required: true
-  password:
-    description:
-      - Password for user accessing Foreman server
-    required: true
-  verify_ssl:
-    description:
-      - Verify SSL of the Foreman server
-    default: true
-    type: bool
   description:
     description:
       - Description of the host collection
     required: false
+    type: str
   organization:
     description:
       - Organization that the host collection is in
     required: true
+    type: str
   name:
     description:
       - Name of the host collection
     required: true
+    type: str
   state:
     description:
       - State of the host collection
@@ -69,7 +57,8 @@ options:
     choices:
       - present
       - absent
-      - present_with_defaults
+    type: str
+extends_documentation_fragment: foreman
 '''
 
 EXAMPLES = '''

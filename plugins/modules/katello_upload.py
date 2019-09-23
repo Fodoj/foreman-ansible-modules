@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -29,8 +33,6 @@ short_description: Upload content to Katello
 description:
     - Allows the upload of content to a Katello repository
 author: "Eric D Helms (@ehelms)"
-requirements:
-    - "apypie"
 options:
   src:
     description:
@@ -43,14 +45,17 @@ options:
     description:
       - Repository to upload file in to
     required: true
+    type: str
   product:
     description:
       - Product to which the repository lives in
     required: true
+    type: str
   organization:
     description:
       - Organization that the Product is in
     required: true
+    type: str
 notes:
     - Currently only idempotent when uploading to an RPM & file repository
 extends_documentation_fragment: foreman
@@ -112,18 +117,18 @@ def main():
     if entity_dict['repository']['content_type'] == 'yum':
         name, epoch, version, release, arch = check_output(['rpm', '--queryformat', '%{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE} %{ARCH}',
                                                            '-qp', entity_dict['src']]).decode('ascii').split()
-        query = 'name = "{}" and epoch = "{}" and version = "{}" and release = "{}" and arch = "{}"'.format(name, epoch, version, release, arch)
+        query = 'name = "{0}" and epoch = "{1}" and version = "{2}" and release = "{3}" and arch = "{4}"'.format(name, epoch, version, release, arch)
         content_unit = module.find_resource('packages', query, params=repository_scope, failsafe=True)
     elif entity_dict['repository']['content_type'] == 'file':
-        query = 'name = "{}" and checksum = "{}"'.format(filename, checksum)
+        query = 'name = "{0}" and checksum = "{1}"'.format(filename, checksum)
         content_unit = module.find_resource('file_units', query, params=repository_scope, failsafe=True)
     else:
         # possible types in 3.12: docker, ostree, yum, puppet, file, deb
-        module.fail_json("Uploading to a {} repository is not supported yet.".format(entity_dict['repository']['content_type']))
+        module.fail_json(msg="Uploading to a {0} repository is not supported yet.".format(entity_dict['repository']['content_type']))
 
     changed = False
     if not content_unit:
-        _, content_upload = module.resource_action('content_uploads', 'create', repository_scope)
+        _content_upload_changed, content_upload = module.resource_action('content_uploads', 'create', repository_scope)
         content_upload_scope = {'id': content_upload['upload_id']}
         content_upload_scope.update(repository_scope)
 

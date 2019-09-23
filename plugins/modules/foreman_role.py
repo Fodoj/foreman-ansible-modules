@@ -17,6 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
@@ -29,15 +33,15 @@ description:
   - Create and Delete Foreman Roles using Foreman API
 author:
   - "Christoffer Reijer (@ephracis) Basalt AB"
-requirements:
-  - "apypie"
 options:
   name:
     description: The name of the role
     required: true
+    type: str
   description:
     description: Description of the role
     required: false
+    type: str
   locations:
     description: List of locations the role should be assigned to
     required: false
@@ -50,6 +54,7 @@ options:
     description: role presence
     default: present
     choices: ["present", "absent"]
+    type: str
 extends_documentation_fragment: foreman
 '''
 
@@ -103,5 +108,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#  vim: set sts=4 ts=8 sw=4 ft=python et noro norl cin si ai :
