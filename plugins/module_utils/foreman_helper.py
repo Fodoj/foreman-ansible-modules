@@ -483,7 +483,7 @@ class ForemanAnsibleModule(AnsibleModule):
         resource_payload = self.foremanapi.resource(resource).action(action).prepare_params(params)
         if options is None:
             options = {}
-        if check_node is None:
+        if check_mode is None:
             check_mode = self.check_mode
         try:
             result = None
