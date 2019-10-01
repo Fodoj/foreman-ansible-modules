@@ -220,7 +220,7 @@ def main():
                 changed = True
 
         if content_overrides is not None:
-            _, product_content = module.resource_action('activation_keys', 'product_content', params={'id': activation_key['id']})
+            _, product_content = module.resource_action('activation_keys', 'product_content', check_mode=False, params={'id': activation_key['id']})
             current_content_overrides = {
                 product['content']['label']: product['enabled_content_override']
                 for product in product_content['results']
