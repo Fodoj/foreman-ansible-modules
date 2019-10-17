@@ -20,6 +20,7 @@
       domain_organizations: "{{ subnet_orgs }}"
       domain_locations: "{{ subnet_locs }}"
       domain_name: "{{ item }}"
+      domain_dns_proxy: "{{ subnet_proxy }}"
       domain_state: present
     with_items: "{{ subnet_doms }}"
   - include: tasks/subnet.yml
@@ -117,12 +118,70 @@
         subnet_state: absent
         subnet_cidr: 27
         expected_change: false
+  - name: 'Test Subnet with proxies'
+    block:
+    - include: tasks/subnet.yml
+      vars:
+        subnet_state: present
+        subnet_cidr: 27
+        subnet_httpboot_proxy: "{{ subnet_proxy }}"
+        subnet_tftp_proxy: "{{ subnet_proxy }}"
+        subnet_dns_proxy: "{{ subnet_proxy }}"
+        subnet_template_proxy: "{{ subnet_proxy }}"
+        expected_change: true
+    - include: tasks/subnet.yml
+      vars:
+        subnet_state: present
+        subnet_cidr: 27
+        subnet_httpboot_proxy: "{{ subnet_proxy }}"
+        subnet_tftp_proxy: "{{ subnet_proxy }}"
+        subnet_dns_proxy: "{{ subnet_proxy }}"
+        subnet_template_proxy: "{{ subnet_proxy }}"
+        expected_change: false
+    - include: tasks/subnet.yml
+      vars:
+        subnet_cidr: 27
+        subnet_state: absent
+        expected_change: true
+    - include: tasks/subnet.yml
+      vars:
+        subnet_state: absent
+        subnet_cidr: 27
+        expected_change: false
+  - name: 'Test Subnet name change'
+    block:
+    - include: tasks/subnet.yml
+      vars:
+        subnet_name: "My test subnet"
+        subnet_mask: '255.255.255.224'
+        subnet_state: present
+        expected_change: true
+    - include: tasks/subnet.yml
+      vars:
+        subnet_name: "My test subnet"
+        subnet_updated_name: "My new test subnet"
+        subnet_mask: '255.255.255.224'
+        subnet_state: present
+        expected_change: true
+    - include: tasks/subnet.yml
+      vars:
+        subnet_name: "My new test subnet"
+        subnet_mask: '255.255.255.224'
+        subnet_state: present
+        expected_change: false
+    - include: tasks/subnet.yml
+      vars:
+        subnet_name: "My new test subnet"
+        subnet_mask: '255.255.255.224'
+        subnet_state: absent
+        expected_change: true
   - name: 'Test Subnet with full params except smart proxies and cidr'
     block:
     - include: tasks/subnet.yml
       vars:
         subnet_state: present
         subnet_name: Test Subnet 2
+        subnet_description: My subnet description
         subnet_dns_primary: '1.1.1.1'
         subnet_dns_secondary: '1.1.1.2'
         subnet_domains: "{{ subnet_doms }}"
@@ -142,6 +201,7 @@
       vars:
         subnet_state: present
         subnet_name: Test Subnet 2
+        subnet_description: My subnet description
         subnet_dns_primary: '1.1.1.1'
         subnet_dns_secondary: '1.1.1.2'
         subnet_domains: []

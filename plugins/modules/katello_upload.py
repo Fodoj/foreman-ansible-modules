@@ -31,8 +31,11 @@ DOCUMENTATION = '''
 module: katello_upload
 short_description: Upload content to Katello
 description:
-    - Allows the upload of content to a Katello repository
+  - Allows the upload of content to a Katello repository
 author: "Eric D Helms (@ehelms)"
+requirements:
+  - python-debian (For deb Package upload)
+  - rpm (For rpm upload)
 options:
   src:
     description:
@@ -57,7 +60,8 @@ options:
     required: true
     type: str
 notes:
-    - Currently only idempotent when uploading to an RPM & file repository
+  - Currently only uploading to deb, RPM & file repositories is supported
+  - For anything but file repositories, a supporting library must be installed. See Requirements.
 extends_documentation_fragment: foreman
 '''
 
@@ -75,13 +79,55 @@ EXAMPLES = '''
 
 RETURN = ''' # '''
 
-from subprocess import check_output
 import os
 import hashlib
+import traceback
 
 from ansible.module_utils.foreman_helper import KatelloAnsibleModule
 
+try:
+    from debian import debfile
+    HAS_DEBFILE = True
+except ImportError:
+    HAS_DEBFILE = False
+    DEBFILE_IMP_ERR = traceback.format_exc()
+
+try:
+    import rpm
+    HAS_RPM = True
+except ImportError:
+    HAS_RPM = False
+    RPM_IMP_ERR = traceback.format_exc()
+
 CONTENT_CHUNK_SIZE = 2 * 1024 * 1024
+
+
+def get_deb_info(path):
+    control = debfile.DebFile(path).debcontrol()
+    return control['package'], control['version'], control['architecture']
+
+
+def get_rpm_info(path):
+    ts = rpm.TransactionSet()
+
+    # disable signature checks, we might not have the key or the file might be unsigned
+    # pre 4.15 RPM needs to use the old name of the bitmask
+    try:
+        vsflags = rpm.RPMVSF_MASK_NOSIGNATURES
+    except AttributeError:
+        vsflags = rpm._RPMVSF_NOSIGNATURES
+    ts.setVSFlags(vsflags)
+
+    with open(path) as rpmfile:
+        rpmhdr = ts.hdrFromFdno(rpmfile)
+
+    name = rpmhdr[rpm.RPMTAG_NAME].decode('ascii')
+    epoch = rpmhdr[rpm.RPMTAG_EPOCHNUM]
+    version = rpmhdr[rpm.RPMTAG_VERSION].decode('ascii')
+    release = rpmhdr[rpm.RPMTAG_RELEASE].decode('ascii')
+    arch = rpmhdr[rpm.RPMTAG_ARCH].decode('ascii')
+
+    return (name, epoch, version, release, arch)
 
 
 def main():
@@ -114,9 +160,18 @@ def main():
     checksum = checksum.hexdigest()
 
     content_unit = None
-    if entity_dict['repository']['content_type'] == 'yum':
-        name, epoch, version, release, arch = check_output(['rpm', '--queryformat', '%{NAME} %{EPOCHNUM} %{VERSION} %{RELEASE} %{ARCH}',
-                                                           '-qp', entity_dict['src']]).decode('ascii').split()
+    if entity_dict['repository']['content_type'] == 'deb':
+        if not HAS_DEBFILE:
+            module.fail_json(msg='The python-debian module is required', exception=DEBFILE_IMP_ERR)
+
+        name, version, architecture = get_deb_info(entity_dict['src'])
+        query = 'name = "{0}" and version = "{1}" and architecture = "{2}"'.format(name, version, architecture)
+        content_unit = module.find_resource('debs', query, params=repository_scope, failsafe=True)
+    elif entity_dict['repository']['content_type'] == 'yum':
+        if not HAS_RPM:
+            module.fail_json(msg='The rpm Python module is required', exception=RPM_IMP_ERR)
+
+        name, epoch, version, release, arch = get_rpm_info(entity_dict['src'])
         query = 'name = "{0}" and epoch = "{1}" and version = "{2}" and release = "{3}" and arch = "{4}"'.format(name, epoch, version, release, arch)
         content_unit = module.find_resource('packages', query, params=repository_scope, failsafe=True)
     elif entity_dict['repository']['content_type'] == 'file':

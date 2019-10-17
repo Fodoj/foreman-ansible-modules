@@ -9,6 +9,7 @@
     server_url: "{{ foreman_server_url }}"
     validate_certs: "{{ foreman_validate_certs }}"
     name: "{{ hostgroup_name }}"
+    updated_name: "{{ hostgroup_updated_name | default(omit) }}"
     parent: "{{ hostgroup_parent | default(omit) }}"
     locations: "{{ hostgroup_locations | default(omit) }}"
     organizations: "{{ hostgroup_organizations | default(omit) }}"
@@ -39,7 +40,6 @@
   register: result
 - assert:
     fail_msg: "Ensuring hostgroup is {{ hostgroup_state }} failed! (expected_change: {{ expected_change | default('unknown') }})"
-    quiet: yes
     that:
       - result.changed == expected_change
   when: expected_change is defined

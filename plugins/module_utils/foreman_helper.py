@@ -16,6 +16,7 @@ from ansible.module_utils.basic import AnsibleModule
 
 try:
     import apypie
+    import requests.exceptions
     HAS_APYPIE = True
 except ImportError:
     HAS_APYPIE = False
@@ -35,6 +36,18 @@ parameter_entity_spec = dict(
 )
 
 
+def _exception2fail_json(msg='Generic failure: %s'):
+    def decor(f):
+        @wraps(f)
+        def inner(self, *args, **kwargs):
+            try:
+                return f(self, *args, **kwargs)
+            except Exception as e:
+                self.fail_from_exception(e, msg % str(e))
+        return inner
+    return decor
+
+
 class KatelloMixin(object):
     def __init__(self, argument_spec=None, **kwargs):
         args = dict(
@@ -44,8 +57,9 @@ class KatelloMixin(object):
             args.update(argument_spec)
         super(KatelloMixin, self).__init__(argument_spec=args, **kwargs)
 
-    def connect(self, ping=True):
-        super(KatelloMixin, self).connect(ping)
+    @_exception2fail_json(msg="Failed to connect to Foreman server: %s ")
+    def connect(self):
+        super(KatelloMixin, self).connect()
         self._patch_content_uploads_update_api()
         self._patch_organization_update_api()
         self._patch_subscription_index_api()
@@ -118,18 +132,6 @@ class KatelloMixin(object):
             _sync_plan_remove_products['params'].append(_organization_parameter)
 
 
-def _exception2fail_json(msg='Generic failure: %s'):
-    def decor(f):
-        @wraps(f)
-        def inner(self, *args, **kwargs):
-            try:
-                return f(self, *args, **kwargs)
-            except Exception as e:
-                self.fail_json(msg=msg % e)
-        return inner
-    return decor
-
-
 class ForemanAnsibleModule(AnsibleModule):
 
     def __init__(self, argument_spec, **kwargs):
@@ -161,6 +163,9 @@ class ForemanAnsibleModule(AnsibleModule):
         self._thin_default = False
         self.state = 'undefined'
         self.entity_spec = {}
+
+        self._before = {}
+        self._after = {}
 
     def clean_params(self):
         return {k: v for (k, v) in self._params.items() if v is not None and k not in self._aliases}
@@ -230,7 +235,7 @@ class ForemanAnsibleModule(AnsibleModule):
             self.fail_json(msg='The apypie Python module is required', exception=APYPIE_IMP_ERR)
 
     @_exception2fail_json(msg="Failed to connect to Foreman server: %s ")
-    def connect(self, ping=True):
+    def connect(self):
         self.foremanapi = apypie.Api(
             uri=self._foremanapi_server_url,
             username=self._foremanapi_username,
@@ -239,17 +244,16 @@ class ForemanAnsibleModule(AnsibleModule):
             verify_ssl=self._foremanapi_validate_certs,
         )
 
+        self.ping()
+
         self._patch_location_api()
         self._patch_subnet_rex_api()
-
-        if ping:
-            self.ping()
 
     @_exception2fail_json(msg="Failed to connect to Foreman server: %s ")
     def ping(self):
         return self.foremanapi.resource('home').call('status')
 
-    @_exception2fail_json('Failed to show resource: %s')
+    @_exception2fail_json(msg='Failed to show resource: %s')
     def show_resource(self, resource, resource_id, params=None):
         if params is None:
             params = {}
@@ -292,6 +296,8 @@ class ForemanAnsibleModule(AnsibleModule):
                 result = {'id': result['id']}
             else:
                 result = self.show_resource(resource, result['id'], params=params)
+        if self._before == {}:
+            self._before = result
         return result
 
     def find_resource_by_name(self, resource, name, **kwargs):
@@ -326,7 +332,7 @@ class ForemanAnsibleModule(AnsibleModule):
         changed, _entity = self.ensure_entity(*args, **kwargs)
         return changed
 
-    @_exception2fail_json('Failed to ensure entity state: %s')
+    @_exception2fail_json(msg='Failed to ensure entity state: %s')
     def ensure_entity(self, resource, desired_entity, current_entity, params=None, state=None, entity_spec=None, synchronous=True):
         """Ensure that a given entity has a certain state
 
@@ -369,6 +375,13 @@ class ForemanAnsibleModule(AnsibleModule):
                 changed, updated_entity = self._delete_entity(resource, current_entity, params, synchronous)
         else:
             self.fail_json(msg='Not a valid state: {0}'.format(state))
+
+        if self._after == {}:
+            self._after = updated_entity
+        else:
+            # ensure_entity was called multiple times, we can't be sure which entity is the real one
+            self._after = {'invalid': True}
+
         return changed, updated_entity
 
     def _create_entity(self, resource, desired_entity, params, entity_spec, synchronous):
@@ -493,8 +506,9 @@ class ForemanAnsibleModule(AnsibleModule):
                 if synchronous and is_foreman_task:
                     result = self.wait_for_task(result)
         except Exception as e:
-            self.fail_json(msg='Error while performing {0} on {1}: {2}'.format(
-                action, resource, str(e)))
+            msg = 'Error while performing {0} on {1}: {2}'.format(
+                action, resource, str(e))
+            self.fail_from_exception(e, msg)
         return True, result
 
     def wait_for_task(self, task):
@@ -505,9 +519,18 @@ class ForemanAnsibleModule(AnsibleModule):
                 self.fail_json(msg="Timout waiting for Task {0}".format(task['id']))
             time.sleep(self.task_poll)
 
-            _task_changed, task = self.resource_action('foreman_tasks', 'show', {'id': task['id']})
+            _task_changed, task = self.resource_action('foreman_tasks', 'show', {'id': task['id']}, synchronous=False)
 
         return task
+
+    def fail_from_exception(self, exc, msg):
+        fail = {'msg': msg}
+        if isinstance(exc, requests.exceptions.HTTPError):
+            try:
+                fail['error'] = exc.response.json()['error']
+            except Exception:
+                fail['error'] = exc.response.text
+        self.fail_json(**fail)
 
 
 class ForemanEntityAnsibleModule(ForemanAnsibleModule):
@@ -551,6 +574,15 @@ class ForemanEntityAnsibleModule(ForemanAnsibleModule):
                     changed |= self.ensure_entity_state(
                         'parameters', None, current_parameter, state="absent", entity_spec=parameter_entity_spec, params=scope)
         return changed
+
+    def exit_json(self, **kwargs):
+        if self._after is None or 'invalid' not in self._after:
+            if 'diff' not in kwargs:
+                kwargs['diff'] = {'before': _flatten_entity(self._before, self.entity_spec),
+                                  'after': _flatten_entity(self._after, self.entity_spec)}
+            if 'entity' not in kwargs:
+                kwargs['entity'] = self._after
+        super(ForemanEntityAnsibleModule, self).exit_json(**kwargs)
 
 
 class KatelloAnsibleModule(KatelloMixin, ForemanAnsibleModule):
@@ -596,6 +628,8 @@ def _entity_spec_helper(spec):
 def _flatten_entity(entity, entity_spec):
     """Flatten entity according to spec"""
     result = {}
+    if entity is None:
+        entity = {}
     for key, value in entity.items():
         if key in entity_spec and value is not None:
             spec = entity_spec[key]

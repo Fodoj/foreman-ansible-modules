@@ -1,25 +1,31 @@
-# Foreman Ansible Modules [![Build Status](https://travis-ci.org/theforeman/foreman-ansible-modules.svg?branch=master)](https://travis-ci.org/theforeman/foreman-ansible-modules)
+# Foreman Ansible Modules ![Build Status](https://github.com/theforeman/foreman-ansible-modules/workflows/CI/badge.svg)
 
 Ansible modules for interacting with the Foreman API and various plugin APIs such as Katello.
-
-## Goals
-
-The intent of this repository is to be a place that community members can develop or contribute modules. The goals of this repository are:
-
-  * centralized location for community modules
-  * a single repository to clone for interacting with Foreman & plugins
-  * source for the official Ansible collection
 
 ## Documentation
 
 A list of all modules and their documentation can be found at [theforeman.org/plugins/foreman-ansible-modules](https://theforeman.org/plugins/foreman-ansible-modules/).
 
-## Supported Foreman and plugins versions
+Documentation how to [write](docs/developing.md), [test](docs/testing.md) and [debug](docs/debugging.md) modules is available in the [`docs`](docs/) folder.
+
+## Support
+
+### Supported Foreman and plugins versions
 
 Modules should support any currently stable Foreman release and the matching set of plugins.
 Some modules have additional features/arguments that are only applied when the corresponding plugin is installed.
 
 We actively test the modules against the latest stable Foreman release and the matching set of plugins.
+
+### Supported Ansible Versions
+
+The modules should work with Ansible >= 2.3.
+
+As we're using Ansible's [documentation fragment](https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_documenting.html#documentation-fragments) feature, that was introduced in Ansible 2.8, `ansible-doc` prior to 2.8 won't be able to display the module documentation, but the modules will still run fine with `ansible` and `ansible-playbook`.
+
+### Supported Python Versions
+
+Starting with Ansible 2.7, Ansible only supports Python 2.7 and 3.5 (and higher). These are also the only Python versions we develop and test the modules against.
 
 ## Installation
 
@@ -77,102 +83,7 @@ As the modules are not installed inside a collection, you will have to refer to 
 * [`apypie`](https://pypi.org/project/apypie/)
 * [`ipaddress`](https://pypi.org/project/ipaddress/) for the `foreman_subnet` module on Python 2.7
 
-## Supported Ansible Versions
-
-The modules should work with Ansible >= 2.3.
-
-As we're using Ansible's [documentation fragment](https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_documenting.html#documentation-fragments) feature, that was introduced in Ansible 2.8, `ansible-doc` prior to 2.8 won't be able to display the module documentation, but the modules will still run fine with `ansible` and `ansible-playbook`.
-
-## Supported Python Versions
-
-Starting with Ansible 2.7, Ansible only supports Python 2.7 and 3.5 (and higher). These are also the only Python versions we develop and test the modules against.
-
 ## Branches
 
 * `master` - current development branch, using the `apypie` library
 * `nailgun` - the state of the repository before the switch to the `apypie` library started, `nailgun` is the only dependency
-
-## How to write modules in this repository
-
-First of all, please have a look at the [Ansible module development](https://docs.ansible.com/ansible/latest/dev_guide/developing_modules_general.html) guide and get familiar with the general Ansible module layout.
-
-When looking at actual modules in this repository ([`foreman_domain`](plugins/modules/foreman_domain.py) is a nice short example), you will notice a few differences to a "regular" Ansible module:
-
-* Instead of `AnsibleModule`, we use `ForemanEntityAnsibleModule` (and a few others, see [`plugins/module_utils/foreman_helper.py`](plugins/module_utils/foreman_helper.py)) which provides an abstraction layer for talking with the Foreman API
-* Instead of Ansible's `argument_spec`, we provide an enhanced version called `entity_spec`. It handles the translation from Ansible module arguments to Foreman API parameters, as nobody wants to write `organization_ids` in their playbook when they can write `organizations`
-
-The rest of the module is usually very minimalistic:
-
-* Connect to the API (`module.connect()`)
-* Find the entity if it already exists (`entity = module.find_resource_by_name(…)`)
-* Adjust the data of the entity if desired
-* Ensure the entity state and details (`changed = module.ensure_resource_state(…)`)
-
-### Specification of the `entity_spec`
-
-The `entity_spec` can be seen as an extended version of Ansible's `argument_spec`. It understands more parameters (e.g. `flat_name`) and supports more `type`s than the original version. An `argument_spec` will be generated from an `entity_spec`. Any parameters not directly known or consumed by `entity_spec` will be passed directly to the `argument_spec`.
-
-In addition to Ansible's `argument_spec`, `entity_spec` understands the following types:
-
-* `type='entity'` The referenced value is another Foreman entity.
-This is usually combined with `flat_name=<entity>_id`.
-* `type='entity_list'` The referenced value is a list of Foreman entities.
-This is usually combined with `flat_name=<entity>_ids`.
-* `type='nested_list'` The referenced value is a list of Foreman entities that are not included in the main API call.
-The module must handle the entities separately.
-See domain parameters in [`foreman_domain`](plugins/modules/foreman_domain.py) for an example.
-The sub entities must be described by `entity_spec=<sub_entity>_spec`.
-* `type='invisible'` The parameter is available to the API call, but it will be excluded from Ansible's `argument_spec`.
-
-`flat_name` provides a way to translate the name of a module argument as known to Ansible to the name understood by the Foreman API.
-
-You can add new or override generated Ansible module arguments, by specifying them in the `argument_spec` as usual.
-
-## How to test modules in this repository
-
-To test, you need a running instance of Foreman, probably with Katello (use [forklift](https://github.com/theforeman/forklift) if unsure).
-Also you need to run `make test-setup` and update `tests/test_playbooks/vars/server.yml`:
-
-```sh
-make test-setup
-vi tests/test_playbooks/vars/server.yml # point to your Foreman instance
-```
-
-To run the tests using the `foreman_global_parameter` module as an example:
-
-```sh
-make test # all tests
-make test_global_parameter  # single test
-make test TEST="-k 'organzation or global_parameter'"  # select tests by expression (see `pytest -h`)
-```
-
-The tests are run against prerecorded server-responses.
-You can (re-)record the cassettes for a specific test with
-
-```sh
-make record_global_parameter
-```
-
-See also [Guidedeline to writing tests](tests/README.md).
-
-## How to debug modules in this repository
-
-Set up debugging using ansible's test-module
-
-```sh
-make debug-setup
-```
-
-Debug with ansible's test-module
-
-```sh
-make debug MODULE=<module name>
-
-# Example: debug the katello_content_view module
-$ make debug MODULE=katello_content_view
-./.tmp/ansible/hacking/test-module -m modules/katello_content_view.py -a @tests/data/content-view.json -D /usr/lib64/python2.7/pdb.py
-...
-```
-
-You can set a number of environment variables besides `MODULE` to configure make. Check the [Makefile](https://github.com/theforeman/foreman-ansible-modules/blob/master/Makefile) for more configuration options.
-
