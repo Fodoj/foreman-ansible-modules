@@ -121,17 +121,19 @@ def main():
 
     filters = entity_dict.pop("filters", None)
 
-    changed = module.ensure_entity_state('roles', entity_dict, entity)
+    changed, entity = module.ensure_entity('roles', entity_dict, entity)
 
     if not module.desired_absent:
         if filters is not None:
-            existing_filters = module.list_resource('filters', "role_id=" + str(entity['id']))
+            existing_filters = entity['filters']
             for filter in filters:
                 filter['role_id'] = entity['id']
                 filter['permissions'] = module.find_resources_by_name('permissions', filter['permissions'])
                 module.ensure_entity_state('filters', filter, None, None, 'present', filters_entity_spec)
             for old_filter in existing_filters:
-                module.ensure_entity('filters', old_filter, None, {}, 'absent')
+                if not type(old_filter) is dict:
+                    old_filter = { 'id': old_filter }
+                module.ensure_entity('filters', None, old_filter, {}, 'absent')
 
     module.exit_json(changed=changed)
 
